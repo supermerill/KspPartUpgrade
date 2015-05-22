@@ -24,7 +24,7 @@ namespace SpaceRace
 				if (allTechName.Contains(tech))
 				{
 					Part p = partToUpdate();
-					Debug.Log("[MU] upgrade title tech : " + tech + " : " + p.partInfo.title+" + "+addSuffix + " . " + newTitle);
+					Debug.Log("[MUT] upgrade title tech : " + tech + " : " + p.partInfo.title+" + "+addSuffix + " . " + newTitle);
 					//AvailablePart aPart = PartLoader.getPartInfoByName(partName);
 					if (newTitle != "")
 					{
@@ -34,7 +34,7 @@ namespace SpaceRace
 					{
 						p.partInfo.title += addSuffix;
 					}
-					Debug.Log("[MU] upgrade title after : " + tech + " : " + p.partInfo.title);
+					Debug.Log("[MUT] upgrade title after : " + tech + " : " + p.partInfo.title);
 					//TODO: redo the partinfo
 				}
 		}
@@ -42,6 +42,17 @@ namespace SpaceRace
 		public override void restore(ConfigNode initialNode)
 		{
 			partToUpdate().partInfo.title = initialNode.GetValue("title");
+		}
+
+
+
+		public override void OnSave(ConfigNode node)
+		{
+			base.OnSave(node);
+			foreach(BaseField field in part.Fields)
+			{
+				Debug.Log("[MUT] field" + field.name + " " + field.guiName + " => " + field.host);
+			}
 		}
 
 	}

@@ -14,6 +14,8 @@ namespace SpaceRace
 		[KSPField]
 		public int test = 10;
 
+		public int pasfield = -100;
+
 		public override void OnLoad(ConfigNode node)
 		{
 			Debug.Log("[MT] onload");
@@ -26,12 +28,13 @@ namespace SpaceRace
 			{
 				Debug.Log("[MT] field " + field.name + " is persistant? " + field.isPersistant + " has value " + field.host);
 			}
+			pasfield = test;
 		}
 
 
 		public override void OnSave(ConfigNode node)
 		{
-			Debug.Log("[MT] onSAVE");
+			Debug.Log("[MT] onSAVE " + pasfield);
 			foreach (BaseField field in Fields)
 			{
 				Debug.Log("[MT] field " + field.name + " is persistant? " + field.isPersistant + " has value " + field.host);
