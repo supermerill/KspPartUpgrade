@@ -163,17 +163,18 @@ namespace SpaceRace
 
 							PartModule module = createModule(p, config);
 							//TODO: test if null.
-
+							
+							//DONT DO THAT \/, it mess the name/index map of Parmodulelist
 							//swap all module to be at the right place
 							// Totally useless. But i do it. In case of a mod use the index.
-							PartModule previousModule = module;
-							PartModule nextModule = null;
-							for (int i = 0; i < p.Modules.Count; i++)
-							{
-								nextModule = p.Modules[i];
-								p.Modules[i] = previousModule;
-								previousModule = nextModule;
-							}
+							//PartModule previousModule = module;
+							//PartModule nextModule = null;
+							//for (int i = 0; i < p.Modules.Count; i++)
+							//{
+							//	nextModule = p.Modules[i];
+							//	p.Modules[i] = previousModule;
+							//	previousModule = nextModule;
+							//}
 
 						}
 						else
@@ -218,6 +219,8 @@ namespace SpaceRace
 
 		public override void OnLoad(ConfigNode root)
 		{
+			//don't load if in editor: it's ok to maj
+			if (HighLogic.LoadedSceneIsEditor) return;
 			Debug.Log("[MUM] load : " + root + " for " + configModule);
 			if (configModule == null)
 			{
@@ -258,19 +261,19 @@ namespace SpaceRace
 										Debug.Log("[MUM] my config : " + config);
 										Debug.Log("[MUM] my part prefab : " + part.partInfo.partPrefab);
 										//TODO: more robust
-										foreach (ModuleUpgradeModule infoMod in part.partInfo.partPrefab.Modules.GetModules<ModuleUpgradeModule>())
-										{
-										Debug.Log("[MUM] search my mum : " + infoMod.moduleName+" "+infoMod.configModule
-											+ ",,;;,, " + infoMod.configModule);
-										}
-										Debug.Log("[MUM] my part prefab module info : " + part.partInfo.partPrefab.Modules[part.Modules.IndexOf(this)]);
-										Debug.Log("[MUM] my part prefab module info conf mod : "
-											+ ((ModuleUpgradeModule)part.partInfo.partPrefab.Modules[part.Modules.IndexOf(this)]).configModule.Length);
+										//foreach (ModuleUpgradeModule infoMod in part.partInfo.partPrefab.Modules.GetModules<ModuleUpgradeModule>())
+										//{
+										//	Debug.Log("[MUM] search my mum : " + infoMod.moduleName + " " + infoMod.configModule
+										//		+ ",,;;,, " + infoMod.configModule);
+										//}
+										//Debug.Log("[MUM] my part prefab module info : " + part.partInfo.partPrefab.Modules[part.Modules.IndexOf(this)]);
+										//Debug.Log("[MUM] my part prefab module info conf mod : "
+										//	+ ((ModuleUpgradeModule)part.partInfo.partPrefab.Modules[part.Modules.IndexOf(this)]).configModule.Length);
 
-										Debug.Log("[MUM] my part prefab conf : " + part.partInfo.partConfig);
-										mod = createModule(part,
-											((ModuleUpgradeModule)part.partInfo.partPrefab.Modules[part.Modules.IndexOf(this)]).configModule[numMod]);
-										Debug.Log("[MUM] readd! : " + mod.moduleName);
+										//Debug.Log("[MUM] my part prefab conf : " + part.partInfo.partConfig);
+										//mod = createModule(part,
+										//	((ModuleUpgradeModule)part.partInfo.partPrefab.Modules[part.Modules.IndexOf(this)]).configModule[numMod]);
+										//Debug.Log("[MUM] readd! : " + mod.moduleName);
 									}
 									catch (Exception e)
 									{

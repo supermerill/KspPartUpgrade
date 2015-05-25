@@ -83,5 +83,24 @@ namespace SpaceRace
 			}
 		}
 
+		public static void loadDictionnary(Dictionary<string, string> dico, string name, ConfigNode root)
+		{
+			if (root.HasNode(name))
+			{
+				if (root.GetNode(name) != null)
+				{
+					ConfigNode nodeDico = root.GetNode(name);
+					if (nodeDico.values != null)
+						foreach (ConfigNode.Value val in nodeDico.values)
+						{
+							if (val != null)
+							{
+								dico[val.name] = val.value;
+							}
+						}
+				}
+			}
+		}
+
 	}
 }

@@ -186,8 +186,8 @@ namespace SpaceRace
 					List<ModuleUpgrade> allUpgrader = new List<ModuleUpgrade>();
 					foreach (PartModule pm in ap.partPrefab.Modules)
 					{
-						Debug.Log("[EU] get all mu : " + pm.moduleName);
-						if (pm is ModuleUpgrade)
+						//Debug.Log("[EU] get all mu : " + pm.moduleName);
+						if (pm != null && pm is ModuleUpgrade)
 						{
 							Debug.Log("[EU] OK ");
 							allUpgrader.Add((ModuleUpgrade)pm);
