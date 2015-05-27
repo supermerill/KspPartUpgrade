@@ -1,4 +1,22 @@
-﻿using System;
+﻿/*
+PartUpgrader
+Copyright (c) Merill, All rights reserved.
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 3.0 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library.
+*/
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -157,7 +175,7 @@ namespace SpaceRace
 
 		public void researchDone(GameEvents.HostTargetAction<RDTech, RDTech.OperationResult> research)
 		{
-			Debug.Log("[EU] researchDone : "+research.target);
+			Debug.Log("[EU] researchDone : " + research.target);
 			//obligé que l'on a changé de tech
 			if (research.target == RDTech.OperationResult.Successful)
 			{
@@ -193,67 +211,83 @@ namespace SpaceRace
 							allUpgrader.Add((ModuleUpgrade)pm);
 						}
 					}
-					foreach(ModuleUpgrade pm in allUpgrader)
+					foreach (ModuleUpgrade pm in allUpgrader)
 					{
-							Debug.Log("[EU] part " + ap.name);
-							Debug.Log("[EU] PartModule " + pm.moduleName);
-							// reset before maj
-							if (firstUgrade)
+						Debug.Log("[EU] part " + ap.name);
+						Debug.Log("[EU] PartModule " + pm.moduleName);
+						// reset before maj
+						if (firstUgrade)
+						{
+							Debug.Log("[EU] firstUgrade ");
+							firstUgrade = false;
+							//reset
+							//save cost in confignode
+							if (ap.partConfig.GetValue("cost") != null)
 							{
-								Debug.Log("[EU] firstUgrade ");
-								firstUgrade = false;
-								//reset
-								//save cost in confignode
-								if (ap.partConfig.GetValue("cost") != null)
-								{
-									ap.cost = float.Parse(ap.partConfig.GetValue("cost"));
-								}
-								else
-								{
-									Debug.Log("[EU] reload cost null > save current cost");
-									ap.partConfig.AddValue("cost", ap.cost);
-									ap.internalConfig.AddValue("cost", ap.cost);
-								}
-								//same for title
-								if (ap.partConfig.GetValue("title") != null)
-								{
-									ap.title = ap.partConfig.GetValue("title");
-								}
-								else
-								{
-									Debug.Log("[EU] reload title null > save current title");
-									ap.partConfig.AddValue("title", ap.title);
-									ap.internalConfig.AddValue("title", ap.title);
-								}
-
-								Debug.Log("[EU] ap.partConfig=" + ap.partConfig);
-								//ConfigNode tempNode = new ConfigNode();
-								//ap.partPrefab.OnSave(tempNode);
-								////print("[EU] ap.partPrefab Save=" + tempNode);
-
-								//ap.partPrefab.OnLoad();
-								//print("[EU] after reload mass=" + ap.partPrefab.mass);
-								//tempNode = new ConfigNode();
-								//ap.partPrefab.OnSave(tempNode);
-								//print("[EU] after reload node save  =" + tempNode);
-
-								//ap.partPrefab.mass = float.Parse(ap.partConfig.GetValue("mass"));
-								//ap.title = (ap.partConfig.GetValue("title"));
-
-								// reload (in reverse order, of course
-								foreach (ModuleUpgrade pmReset in allUpgrader.Reverse<ModuleUpgrade>())
-								{
-									Debug.Log("[EU] reload " + pmReset.moduleName);
-									pmReset.restore(ap.partConfig);
-								}
+								ap.cost = float.Parse(ap.partConfig.GetValue("cost"));
+							}
+							else
+							{
+								Debug.Log("[EU] reload cost null > save current cost");
+								ap.partConfig.AddValue("cost", ap.cost);
+								ap.internalConfig.AddValue("cost", ap.cost);
+							}
+							//same for title
+							if (ap.partConfig.GetValue("title") != null)
+							{
+								ap.title = ap.partConfig.GetValue("title");
+							}
+							else
+							{
+								Debug.Log("[EU] reload title null > save current title");
+								ap.partConfig.AddValue("title", ap.title);
+								ap.internalConfig.AddValue("title", ap.title);
 							}
 
-							Debug.Log("[EU] UPGRADE " + pm.moduleName);
-							pm.upgrade(allTechResearched);
-							Debug.Log("[EU] UPGRADE END" + pm.moduleName);
+							Debug.Log("[EU] ap.partConfig=" + ap.partConfig);
+							//ConfigNode tempNode = new ConfigNode();
+							//ap.partPrefab.OnSave(tempNode);
+							////print("[EU] ap.partPrefab Save=" + tempNode);
 
+							//ap.partPrefab.OnLoad();
+							//print("[EU] after reload mass=" + ap.partPrefab.mass);
+							//tempNode = new ConfigNode();
+							//ap.partPrefab.OnSave(tempNode);
+							//print("[EU] after reload node save  =" + tempNode);
+
+							//ap.partPrefab.mass = float.Parse(ap.partConfig.GetValue("mass"));
+							//ap.title = (ap.partConfig.GetValue("title"));
+
+							// reload (in reverse order, of course
+							foreach (ModuleUpgrade pmReset in allUpgrader.Reverse<ModuleUpgrade>())
+							{
+								Debug.Log("[EU] reload " + pmReset.moduleName);
+								try
+								{
+									pmReset.restore(ap.partConfig);
+								}
+								catch (Exception e)
+								{
+									print("Error when restore " + pm.moduleName + ", module n° "
+										+ ap.partPrefab.Modules.IndexOf(pm) + " in part " + ap.name + ", " + ap.title);
+								}
+							}
 						}
-					
+
+						Debug.Log("[EU] UPGRADE " + pm.moduleName);
+						try
+						{
+							pm.upgrade(allTechResearched);
+						}
+						catch (Exception e)
+						{
+							print("Error when upgrading " + pm.moduleName + ", module n° "
+								+ ap.partPrefab.Modules.IndexOf(pm) + " in part " + ap.name + ", " + ap.title);
+						}
+						Debug.Log("[EU] UPGRADE END" + pm.moduleName);
+
+					}
+
 				}
 			}
 			catch (Exception e)

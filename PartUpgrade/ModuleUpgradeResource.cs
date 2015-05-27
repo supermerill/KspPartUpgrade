@@ -1,4 +1,22 @@
-﻿using System;
+﻿/*
+PartUpgrader
+Copyright (c) Merill, All rights reserved.
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 3.0 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library.
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +28,9 @@ namespace SpaceRace
 	{
 		[KSPField]
 		public string resourceName;
+
+		//bool to load in the first "frame" after loading, because i want to load AFTER resource loading. 
+		private bool needLoading = false;
 
 		public override void upgradeValue(Part p, float value)
 		{
@@ -167,6 +188,7 @@ namespace SpaceRace
 
 		}
 
+		//done before the resoruce Loading ... so it's a bit useless.
 		public override void OnLoad(ConfigNode node)
 		{
 			base.OnLoad(node);
@@ -174,7 +196,7 @@ namespace SpaceRace
 			PartResource resource = part.Resources[resourceName];
 			//in flight ?
 			if (node.GetValue("present") != null && !HighLogic.LoadedSceneIsEditor)
-			{ 
+			{
 				if (bool.Parse(node.GetValue("present")))
 				{
 					if (resource == null)
@@ -199,25 +221,30 @@ namespace SpaceRace
 						resource.enabled = false;
 						resource.amount = 0;
 						resource.maxAmount = 0;
+						//i think it doesn't work for the same reason as below : 
+						//  need to do that after reseource loading, not before.
+						//bored
+
 					}
 				}
 			}
 			else if (HighLogic.LoadedSceneIsEditor)
 			{
-				Debug.Log("[MUR] load in editor " + resource);
-				Debug.Log("[MUR] load in editor " + part.partInfo);
-				Debug.Log("[MUR] load in editor " + part.partInfo.partPrefab);
-				Debug.Log("[MUR] load in editor " + resourceName);
-				Debug.Log("[MUR] load in editor " + part.partInfo.partPrefab.Resources[resourceName]);
-				//update from partPrefab
-				//add : auto
-				//remove: not supported
-				//modify: \/
+				needLoading = true;
+			}
+		}
+
+
+		//update when in vab
+		public void Update()
+		{
+			if (needLoading)
+			{
+				needLoading = false;
+				PartResource resource = part.Resources[resourceName];
 				PartResource resourcePrefab = part.partInfo.partPrefab.Resources[resourceName];
-				Debug.Log("[MUR] load in editor " + resource.maxAmount + " => " + resourcePrefab.maxAmount);
-				resource.maxAmount = 20;// resourcePrefab.maxAmount;
-				resource.amount = 2;//resourcePrefab.amount;
-				Debug.Log("[MUR] load in editor done! " + resource.maxAmount + " <=> " + resourcePrefab.maxAmount);
+				resource.maxAmount = resourcePrefab.maxAmount;
+				resource.amount = resourcePrefab.amount;
 			}
 		}
 
