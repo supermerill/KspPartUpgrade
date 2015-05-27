@@ -1,5 +1,4 @@
 # PartUpgrade
-Licence: LGPL
 This project is about upgrading parts when researching tech nodes in kerbal space program.
 ## how it work
 PartUpgrade work with PartModule.
@@ -18,5 +17,9 @@ You can look at ModuleUpgradeEngine to a more complex module that update a speci
 
 When subclassing PartUpgrade, your module is called when an " upgrade pass occur". It's a call to restore with the part config node, and after a call to upgrade with all the current researched technologies.  
 If you want to not upgrade all the flying part at the same time, you should define also the onload/onsave method to persist/load the not-upgraded data (unless it's in the editor).
+#### License
+Source code: GPL
+The released dll is distributed as CC BY-NC 4.0
+
 
 by Merill
