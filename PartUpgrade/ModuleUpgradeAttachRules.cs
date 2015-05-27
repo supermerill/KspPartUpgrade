@@ -23,6 +23,7 @@ using UnityEngine;
 
 namespace SpaceRace
 {
+	//TODO: test
 	class ModuleUpgradeAttachRules : ModuleUpgradeSet
 	{
 		// attachment rules: stack, srfAttach, allowStack, allowSrfAttach, allowCollision

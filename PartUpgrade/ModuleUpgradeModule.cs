@@ -142,41 +142,22 @@ namespace SpaceRace
 					try
 					{
 						//get the module
-						//ConfigNode node = new ConfigNode();
 						PartModule mod = p.Modules[moduleUpgradeName];
-						//make all fields persistant => doesn't work
-						//Debug.Log("[MUM] make all fields persistant " + mod.Fields.Count);
-						////if (persistant)
-						//{
-						//	foreach (BaseField f in mod.Fields)
-						//	{
-						//		Debug.Log("[MUM] before " + f.name + " ispersistant = " + f.isPersistant);
-						//		//do NOTHING
-						//		f.isPersistant = true;
-						//		Debug.Log("[MUM] set " + f.name + " ispersistant = " + f.isPersistant);
-						//		//get the KSPField f the object
-						//		//f.host.
-						//		//Part p;
-						//		//IConfigNode icn;
-						//	}
-						//}
 
 						//get the node in the initialNode
 						foreach (ConfigNode intialModuleNode in initialNode.GetNodes("MODULE"))
 						{
-							Debug.Log("[MUM] search module " + intialModuleNode.GetValue("name"));
+							//Debug.Log("[MUM] search module " + intialModuleNode.GetValue("name"));
 							if (intialModuleNode.GetValue("name") == moduleUpgradeName)
 							{
 								Debug.Log("[MUM] restore: replace values in " + moduleUpgradeName);
 								mod.Load(intialModuleNode);
-								//Debug.Log("[MUM] load done ");
 							}
 						}
-						//Debug.Log("[MUM] after (info) : " + mod.GetInfo());
+						//restore info
 						for (int i = 0; i < part.partInfo.moduleInfos.Count; i++)
 						{
 							AvailablePart.ModuleInfo info = part.partInfo.moduleInfos[i];
-							//Debug.Log("[MUM] searc info : " + info.moduleName + " =?= " + mod.moduleName.Replace("Module", ""));
 							if (info.moduleName.Equals(mod.moduleName.Replace("Module", "")))
 							{
 								info.info = mod.GetInfo();
@@ -216,6 +197,8 @@ namespace SpaceRace
 							//	previousModule = nextModule;
 							//}
 
+							// when upgrading with delete, the partmodule order is mess up anyway.
+							// it doesn't mess up my test save, but it may be dangerous...
 						}
 						else
 						{
@@ -239,20 +222,13 @@ namespace SpaceRace
 						}
 						else
 						{
-							Debug.Log("[MUM] do not del (retore create) because it's not inside");
+							Debug.Log("[MUM] do not del (restore create) because it's not inside");
 						}
 					}
 					catch (Exception e)
 					{
 						Debug.Log("[MUM] can't REMOVE (from restore of create) " + p.Modules.Count);
 					}
-				}
-			}
-			foreach (PartModule pm in part.partInfo.partPrefab.Modules)
-			{
-				if (pm == this)
-				{
-					Debug.Log("[MUM] RESTORE: FIND ME! ");
 				}
 			}
 		}
@@ -266,7 +242,6 @@ namespace SpaceRace
 			if (HighLogic.LoadedSceneIsEditor) return;
 			if (configModule == null)
 			{
-				Debug.Log("[MUM] load configModule is null");
 				//is a partprefab?
 				if (!persisted)
 				{
@@ -275,7 +250,7 @@ namespace SpaceRace
 				}
 				else
 				{
-					Debug.Log("[MUM] load configModule is persisted");
+					Debug.Log("[MUM] load persisted configModule");
 					//put data from config node to modules
 					try
 					{
@@ -286,7 +261,7 @@ namespace SpaceRace
 						{
 							string moduleUpgradeName = config.GetValue("name");
 							numMod++;
-							Debug.Log("[MUM] on load in flight  module name to save: " + moduleUpgradeName
+							Debug.Log("[MUM] on load in flight, module name: " + moduleUpgradeName
 								+ " => " + config.HasData + " " + config.CountValues);
 							if (config.CountValues > 1)
 							{
@@ -335,12 +310,6 @@ namespace SpaceRace
 														//create the module (without the partinfo)
 														Debug.Log("[MUM] find a good node!");
 														PartModule mud = createModule(part, config2, false);
-														Debug.Log("[MUM] find a good node! " + mud);
-														Debug.Log("[MUM] find a good node! " + mud.moduleName);
-														Debug.Log("[MUM] find a good node! " + moduleUpgradeName);
-														Debug.Log("[MUM] find a good node!" + part.Modules.Contains(moduleUpgradeName));
-														Debug.Log("[MUM] find a good node!" + part.Modules[moduleUpgradeName]);
-														Debug.Log("[MUM] find a good node!" + part.Modules.IndexOf(mud));
 
 														break;
 													}
@@ -476,8 +445,6 @@ namespace SpaceRace
 					}
 				}
 			}
-			//Debug.Log("[MUM] extract : " + (configModule == null ? "null" : "" + configModule.Length));
-			// change external modle to their persisted data
 
 		}
 
@@ -486,7 +453,7 @@ namespace SpaceRace
 		{
 			try
 			{
-				Debug.Log("[MUM] on save " + id + " => " + this.configModule);
+				Debug.Log("[MUM] on save "+tech+"/"+type+"/" + id);
 				base.OnSave(node);
 				//no persisted data yet?
 				if (this.configModule == null)
@@ -512,7 +479,6 @@ namespace SpaceRace
 					this.configModule = mum.configModule;
 					persisted = true;
 				}
-				Debug.Log("[MUM] on save confignode? " + id + " => " + this.configModule);
 				//save the config nodes
 				foreach (ConfigNode config in configModule)
 				{
@@ -556,7 +522,6 @@ namespace SpaceRace
 						}
 					}
 				}
-				Debug.Log("[MUM] Onsave saved : " + configModule);
 			}
 			catch (Exception e)
 			{
@@ -616,7 +581,10 @@ namespace SpaceRace
 			}
 		}
 
-		//thanks to ialdabaoth for this
+		//thanks to ialdabaoth for this (found in forum with : 
+		//   "For everyone who needs to add a PartModule to a part in the VAB, here is how you do it")
+		// I consider it as public domain licence.
+		// http://forum.kerbalspaceprogram.com/threads/27851-part-AddModule%28ConfigNode-node%29-NullReferenceException-in-PartModule-Load%28node%29-help
 		//it's calling the Awake() method of a PartModule
 		public static bool Awaken(PartModule module)
 		{

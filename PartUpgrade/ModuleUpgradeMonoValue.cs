@@ -31,15 +31,11 @@ namespace SpaceRace
 		public override void upgrade(List<string> allTechName)
 		{
 			Part p = partToUpdate();
-			print("[MU] upgrade : " + tech2value.Count+" "+moduleName);
-			//foreach (KeyValuePair<string, float> entry in tech2value.Reverse())
 			for (int index = tech2value.Count-1; index >=0 ; index--)
 			{
 				KeyValuePair<string, float> entry = tech2value[index];
-				print("[MU] upgrade tech : " + entry);
 				if (allTechName.Contains(entry.Key))
 				{
-					print("[MU] upgrade !");
 					upgradeValue(p, entry.Value);
 				}
 			}
@@ -47,7 +43,6 @@ namespace SpaceRace
 
 		public override void restore(ConfigNode initialNode)
 		{
-			print("[MU] restore : " + tech2value.Count + " " + moduleName);
 			restore(partToUpdate(), initialNode);
 		}
 
@@ -70,7 +65,6 @@ namespace SpaceRace
 		public override void OnSave(ConfigNode node)
 		{
 			base.OnSave(node);
-			//saveDictionnary(tech2value, "TECH-VALUE", node);
 		}
 
 	}

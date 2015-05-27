@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace SpaceRace
 {
+	//testing module. no useful utility
 	class ModuleTest : PartModule
 	{
 		[KSPField(isPersistant=true)]

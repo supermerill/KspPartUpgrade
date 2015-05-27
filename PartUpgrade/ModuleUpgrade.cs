@@ -22,35 +22,30 @@ using System.Text;
 
 namespace SpaceRace
 {
-	class ModuleUpgrade : PartModule
+	abstract class ModuleUpgrade : PartModule
 	{
-		[KSPField]
-		public string partName = null;
 
-		public virtual void upgrade(List<string> allTechName)
-		{
+		/*
+		 * Method to override to upgrade your part.
+		 * Please use the tech name list to check what upgrade to use.
+		 * */
+		public abstract virtual void upgrade(List<string> allTechName);
 
-		}
+		/*
+		 * Method to override to restore your part before an upgrade.
+		 * Use the ConfigNode of your part to get your restore data.
+		 * */
+		public abstract virtual void restore(ConfigNode initialNode);
 
-		public virtual void restore(ConfigNode initialNode)
-		{
 
-		}
-
+		// utility method, old code from when i think i could use stub part to upgrade the real part.
+		//you can use part directly in your code if you wish, it must be the same.
 		public Part partToUpdate()
 		{
-			Part p = null;
-			if (partName == null)
-			{
-				p = part.partInfo.partPrefab;
-			}
-			else
-			{
-				AvailablePart aPart = PartLoader.getPartInfoByName(partName);
-				p = aPart.partPrefab;
-			}
-			return p;
+			return part.partInfo.partPrefab;
 		}
+
+		//utility save/load methods
 
 		public static void saveDictionnary<X>(Dictionary<string, X> dico, string name, ConfigNode root)
 		{

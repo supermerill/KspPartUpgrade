@@ -58,8 +58,8 @@ namespace SpaceRace
 			}
 			else
 			{
-				resource.maxAmount = (float)(resource.maxAmount + value);
-				resource.amount = (float)(resource.amount + value);
+				resource.maxAmount = (float)(/*resource.maxAmount + */value);
+				resource.amount = (float)(/*resource.amount + */value);
 				Debug.Log("[MUR] better amount ");
 			}
 			foreach (PartResource pr in p.Resources)
@@ -100,16 +100,9 @@ namespace SpaceRace
 			for (int i = 0; i < p.partInfo.resourceInfos.Count; i++)
 			{
 				AvailablePart.ResourceInfo info = p.partInfo.resourceInfos[i];
-				Debug.Log("[MUR] info.resourceName = '" + info.resourceName + "'");
-				//Debug.Log("[MUR] info.info = " + info.info);
-				//Debug.Log("[MUR] info.primaryInfo = " + info.primaryInfo);
-				//Debug.Log("[MUR] res.GetInfo = " + resource.GetInfo());
-				//Debug.Log("[MUR] res.info.name = " + resource.info.name);
-				//Debug.Log("[MUR] addSpaces(resource.resourceName) = '" + addSpaces(resource.resourceName) + "'");
+				//Debug.Log("[MUR] info.resourceName = '" + info.resourceName + "'");
 				if (info.resourceName.Equals(addSpaces(resource.resourceName)))
 				{
-					//Debug.Log("[MUR] info.primaryInfo = " + info.primaryInfo);
-					//Debug.Log("[MUR] info.info = " + info.info);
 					info.primaryInfo = createPrimaryInfo(resource);
 					info.info = createInfo(resource);
 				}
@@ -149,9 +142,9 @@ namespace SpaceRace
 					}
 				}
 				//can't find : remove
-				Debug.Log("[MUR] remove resource B (count) : " + p.Resources.Count + " ? " + p.Resources.list.Count);
+				Debug.Log("[MUR] remove resource Before (count) : " + p.Resources.Count + " ? " + p.Resources.list.Count);
 				removeResource(resource, p);
-				Debug.Log("[MUR] remove resource (count) : " + p.Resources.Count + " ? " + p.Resources.list.Count);
+				Debug.Log("[MUR] remove resource After (count) : " + p.Resources.Count + " ? " + p.Resources.list.Count);
 
 			}
 			else
@@ -256,9 +249,6 @@ namespace SpaceRace
 				AvailablePart.ResourceInfo info = p.partInfo.resourceInfos[i];
 				try
 				{
-					//Debug.Log("[MUR] remove? info.resourceName = '" + info.resourceName + "'");
-					//Debug.Log("[MUR] remove? resource.resourceName = '" + resource.resourceName + "'");
-					//Debug.Log("[MUR] remove? addSpaces(resource.resourceName) = '" + addSpaces(resource.resourceName) + "'");
 					if (info.resourceName.Equals(addSpaces(resource.resourceName)))
 					{
 						Debug.Log("[MUR] remove!!! info.resourceName = '" + info.resourceName + "'");
@@ -274,7 +264,7 @@ namespace SpaceRace
 			//remove resource
 			p.Resources.list.Remove(resource);
 			Destroy(resource);
-			//// don't know what it does, but the name is cool
+			//// don't know what it does, perhaps nothing
 			//p.Resources.UpdateList();
 		}
 

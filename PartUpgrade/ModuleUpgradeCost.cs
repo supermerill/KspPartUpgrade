@@ -26,14 +26,14 @@ namespace SpaceRace
 	{
 		public override void upgradeValue(Part p, float value)
 		{
-			print("[MUC] cost before : " + part.partInfo.partPrefab.mass);
 			p.partInfo.cost = value;
-			print("[MUC] cost after : " + part.partInfo.partPrefab.mass);
 		}
 
 		public override void restore(Part p, ConfigNode initialNode)
 		{
 			p.partInfo.cost = float.Parse(initialNode.GetValue("cost"));
 		}
+
+		//don't need to save/load part in flight, as we can't and it's not useful (maybe if recover...)
 	}
 }

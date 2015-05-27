@@ -24,6 +24,7 @@ using UnityEngine;
 
 namespace SpaceRace
 {
+	//TODO: test
 	class ModuleUpgradeSet : ModuleUpgrade
 	{
 		public List<KeyValuePair<string, string>> tech2value = new List<KeyValuePair<string, string>>();
@@ -32,7 +33,6 @@ namespace SpaceRace
 		{
 			Part p = partToUpdate();
 			print("[MUS] upgrade : " + tech2value.Count + " " + moduleName);
-			//foreach (KeyValuePair<string, string> entry in tech2value)
 			for (int index = tech2value.Count - 1; index >= 0; index--)
 			{
 				KeyValuePair<string, string> entry = tech2value[index];
