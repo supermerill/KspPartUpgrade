@@ -22,14 +22,14 @@ using System.Text;
 
 namespace SpaceRace
 {
-	class ModuleUpgradeCost : ModuleUpgradeMonoValue
+	public class ModuleUpgradeCost : ModuleUpgradeMonoValue
 	{
 		public override void upgradeValue(Part p, float value)
 		{
 			p.partInfo.cost = value;
 		}
 
-		public override void restore(Part p, ConfigNode initialNode)
+		public override void Restore(Part p, ConfigNode initialNode)
 		{
 			p.partInfo.cost = float.Parse(initialNode.GetValue("cost"));
 		}

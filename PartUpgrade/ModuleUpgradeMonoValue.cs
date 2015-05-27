@@ -23,27 +23,28 @@ using System.Text;
 
 namespace SpaceRace
 {
-	class ModuleUpgradeMonoValue : ModuleUpgrade
+	public class ModuleUpgradeMonoValue : ModuleUpgrade
 	{
 
 		public List<KeyValuePair<string, float>> tech2value = new List<KeyValuePair<string, float>>();
 
-		public override void upgrade(List<string> allTechName)
+		public override void Upgrade(List<string> allTechName)
 		{
 			Part p = partToUpdate();
 			for (int index = tech2value.Count-1; index >=0 ; index--)
 			{
 				KeyValuePair<string, float> entry = tech2value[index];
-				if (allTechName.Contains(entry.Key))
+				if (allTechName.Contains(entry.Key) || HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX)
 				{
 					upgradeValue(p, entry.Value);
+					break;
 				}
 			}
 		}
 
-		public override void restore(ConfigNode initialNode)
+		public override void Restore(ConfigNode initialNode)
 		{
-			restore(partToUpdate(), initialNode);
+			Restore(partToUpdate(), initialNode);
 		}
 
 		public virtual void upgradeValue(Part p, float value)
@@ -51,14 +52,14 @@ namespace SpaceRace
 
 		}
 
-		public virtual void restore(Part p, ConfigNode node)
+		public virtual void Restore(Part p, ConfigNode node)
 		{
 
 		}
 
-		public override void OnLoad(ConfigNode node)
+		public override void OnLoadIntialNode(ConfigNode node)
 		{
-			base.OnLoad(node);
+			base.OnLoadIntialNode(node);
 			loadDictionnary(tech2value, "TECH-VALUE", node);
 		}
 

@@ -33,8 +33,6 @@ namespace SpaceRace
 
 		private List<string> allTechResearched;
 
-		//private List<AvailablePart> partsToFetch;
-
 		public void Start()
 		{
 			allTechResearched = new List<string>();
@@ -48,11 +46,14 @@ namespace SpaceRace
 		{
 			//maj currenttech
 			allTechResearched.Clear();
-			ProtoScenarioModule protoScenario = HighLogic.CurrentGame.scenarios.Find(x => x.moduleName == "ResearchAndDevelopment");
-			foreach (ConfigNode tech in protoScenario.GetData().GetNodes("Tech"))
+			if (HighLogic.CurrentGame.Mode != Game.Modes.SANDBOX)
 			{
-				string node = tech.GetValue("id");
-				allTechResearched.Add(node);
+				ProtoScenarioModule protoScenario = HighLogic.CurrentGame.scenarios.Find(x => x.moduleName == "ResearchAndDevelopment");
+				foreach (ConfigNode tech in protoScenario.GetData().GetNodes("Tech"))
+				{
+					string node = tech.GetValue("id");
+					allTechResearched.Add(node);
+				}
 			}
 		}
 
@@ -67,9 +68,16 @@ namespace SpaceRace
 
 		public bool needReload()
 		{
+			if (HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX)
+			{
+				//don't need to reload a sandbox!
+				return false;
+			}
+
 			List<string> researchedNow = new List<string>();
 			researchedNow.AddRange(allTechResearched);
 			ProtoScenarioModule protoScenario = HighLogic.CurrentGame.scenarios.Find(x => x.moduleName == "ResearchAndDevelopment");
+
 			foreach (ConfigNode tech in protoScenario.GetData().GetNodes("Tech"))
 			{
 				string node = tech.GetValue("id");
@@ -130,7 +138,7 @@ namespace SpaceRace
 						// reset before maj
 						if (firstUgrade)
 						{
-							Debug.Log("[EU] restore all parts ");
+							Debug.Log("[EU] Restore all parts for part " + ap.name);
 							firstUgrade = false;
 							//reset
 							//save cost in confignode
@@ -164,11 +172,13 @@ namespace SpaceRace
 								Debug.Log("[EU] reload " + pmReset.moduleName);
 								try
 								{
-									pmReset.restore(ap.partConfig);
+									//try to restore from last tech or from current techs?
+									//currently, from last tech.
+									pmReset.Restore(ap.partConfig);
 								}
 								catch (Exception e)
 								{
-									Debug.LogError("Error when restore " + pm.moduleName + ", module n° "
+									Debug.LogError("Error when Restore " + pm.moduleName + ", module n° "
 										+ ap.partPrefab.Modules.IndexOf(pm) + " in part " + ap.name + ", " + ap.title);
 								}
 							}
@@ -177,7 +187,7 @@ namespace SpaceRace
 						Debug.Log("[EU] Upgrade PartModule " + pm.moduleName + " for part " + ap.name);
 						try
 						{
-							pm.upgrade(allTechResearched);
+							pm.Upgrade(allTechResearched);
 						}
 						catch (Exception e)
 						{

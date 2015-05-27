@@ -25,11 +25,11 @@ using UnityEngine;
 namespace SpaceRace
 {
 	//TODO: test
-	class ModuleUpgradeSet : ModuleUpgrade
+	public abstract class ModuleUpgradeSet : ModuleUpgrade
 	{
 		public List<KeyValuePair<string, string>> tech2value = new List<KeyValuePair<string, string>>();
 
-		public override void upgrade(List<string> allTechName)
+		public override void Upgrade(List<string> allTechName)
 		{
 			Part p = partToUpdate();
 			print("[MUS] upgrade : " + tech2value.Count + " " + moduleName);
@@ -37,33 +37,31 @@ namespace SpaceRace
 			{
 				KeyValuePair<string, string> entry = tech2value[index];
 				print("[MUS] upgrade tech : " + entry);
-				if (allTechName.Contains(entry.Key))
+				if (allTechName.Contains(entry.Key) || HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX)
 				{
 					print("[MUS] upgrade !");
 					upgradeValue(p, entry.Value);
+					break;
 				}
 			}
 		}
 
-		public override void restore(ConfigNode initialNode)
+		public override void Restore(ConfigNode initialNode)
 		{
-			print("[MUS] restore : " + tech2value.Count + " " + moduleName);
-			restore(partToUpdate(), initialNode);
+			print("[MUS] Restore : " + tech2value.Count + " " + moduleName);
+			Restore(partToUpdate(), initialNode);
 		}
 
-		public virtual void upgradeValue(Part p, string value)
-		{
+		public abstract void upgradeValue(Part p, string value);
 
-		}
-
-		public virtual void restore(Part p, ConfigNode node)
+		public virtual void Restore(Part p, ConfigNode node)
 		{
 
 		}
 
-		public override void OnLoad(ConfigNode node)
+		public override void OnLoadIntialNode(ConfigNode node)
 		{
-			base.OnLoad(node);
+			base.OnLoadIntialNode(node);
 			loadDictionnary(tech2value, "TECH-VALUE", node);
 		}
 	}

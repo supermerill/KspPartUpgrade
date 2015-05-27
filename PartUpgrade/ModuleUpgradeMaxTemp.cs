@@ -23,7 +23,7 @@ using System.Text;
 
 namespace SpaceRace
 {
-	class ModuleUpgradeMaxTemp : ModuleUpgradeMonoValue
+	public class ModuleUpgradeMaxTemp : ModuleUpgradeMonoValue
 	{
 
 		public override void upgradeValue(Part p, float value)
@@ -31,14 +31,14 @@ namespace SpaceRace
 			p.maxTemp = value;
 		}
 
-		public override void restore(Part p, ConfigNode initialNode)
+		public override void Restore(Part p, ConfigNode initialNode)
 		{
 			p.maxTemp = float.Parse(initialNode.GetValue("maxTemp"));
 		}
 
-		public override void OnLoad(ConfigNode node)
+		public override void OnLoadInFlight(ConfigNode node)
 		{
-			base.OnLoad(node);
+			base.OnLoadInFlight(node);
 			string val = node.GetValue("maxTemp");
 			if (val != null)
 			{

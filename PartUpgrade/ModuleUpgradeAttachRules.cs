@@ -23,8 +23,7 @@ using UnityEngine;
 
 namespace SpaceRace
 {
-	//TODO: test
-	class ModuleUpgradeAttachRules : ModuleUpgradeSet
+	public class ModuleUpgradeAttachRules : ModuleUpgradeSet
 	{
 		// attachment rules: stack, srfAttach, allowStack, allowSrfAttach, allowCollision
 		//attachRules = 1,1,1,1,0
@@ -32,28 +31,28 @@ namespace SpaceRace
 		{
 			Debug.Log("[MUAR] upgradeValue : " + value);
 			string oih = value.Replace(" ", "");
-			string[] all = value.Replace(" ", "").Split(new char[]{','});
+			string[] all = value.Replace(" ", "").Split(new char[] { ',' });
 			if (all.Length > 0)
 			{
 				Debug.Log("[MUAR] stack : " + p.attachRules.stack + " => " + (all[0] == "1"));
 				p.attachRules.stack = all[0] == "1";
 			}
-			else if (all.Length > 1)
+			if (all.Length > 1)
 			{
 				Debug.Log("[MUAR] srfAttach : " + p.attachRules.srfAttach + " => " + (all[1] == "1"));
 				p.attachRules.srfAttach = all[1] == "1";
 			}
-			else if (all.Length > 2)
+			if (all.Length > 2)
 			{
 				Debug.Log("[MUAR] allowStack : " + p.attachRules.allowStack + " => " + (all[2] == "1"));
 				p.attachRules.allowStack = all[2] == "1";
 			}
-			else if (all.Length > 3)
+			if (all.Length > 3)
 			{
 				Debug.Log("[MUAR] allowSrfAttach : " + p.attachRules.allowSrfAttach + " => " + (all[3] == "1"));
 				p.attachRules.allowSrfAttach = all[3] == "1";
 			}
-			else if (all.Length > 4)
+			if (all.Length > 4)
 			{
 				Debug.Log("[MUAR] allowCollision : " + p.attachRules.allowCollision + " => " + (all[4] == "1"));
 				p.attachRules.allowCollision = all[4] == "1";
@@ -61,19 +60,20 @@ namespace SpaceRace
 			
 		}
 
-		public override void restore(Part p, ConfigNode initialNode)
+		public override void Restore(Part p, ConfigNode initialNode)
 		{
 			//p.partInfo.partPrefab.mass = float.Parse(initialNode.GetValue("attachRules"));
 			upgradeValue(p, initialNode.GetValue("attachRules"));
 		}
 
 		//a bit useless. perhaps not with kis.
-		public override void OnLoad(ConfigNode node)
+		public override void OnLoadInFlight(ConfigNode node)
 		{
-			base.OnLoad(node);
+			base.OnLoadInFlight(node);
 			string val = node.GetValue("attachRules");
 			if (val != null)
 			{
+				//Can be used by kis/kas things.
 				upgradeValue(part, val);
 			}
 		}

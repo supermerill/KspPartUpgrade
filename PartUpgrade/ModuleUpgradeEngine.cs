@@ -23,12 +23,12 @@ using UnityEngine;
 
 namespace SpaceRace
 {
-	class ModuleUpgradeEngine : ModuleUpgrade
+	public class ModuleUpgradeEngine : ModuleUpgrade
 	{
 
-		List<MUE_TechValue> allValues;
+		public List<MUE_TechValue> allValues;
 
-		public override void upgrade(List<string> allTechName)
+		public override void Upgrade(List<string> allTechName)
 		{
 			//find the last ok node
 			for (int i = allValues.Count - 1; i >= 0; i--)
@@ -36,7 +36,8 @@ namespace SpaceRace
 				MUE_TechValue val = allValues[i];
 
 				Part p = partToUpdate();
-				if (val.tech != null && allTechName.Contains(val.tech))
+				//check tech (or SANDBOX mode)
+				if (val.tech != null && (allTechName.Contains(val.tech) || HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX))
 				{
 					setIspThrustFuelFLow(p, val.minThrust, val.maxThrust, val.atmosphereIsp, val.vacuumIsp);
 					majInfo(p, getModuleEngines(p));
@@ -46,7 +47,7 @@ namespace SpaceRace
 		}
 
 
-		public override void restore(ConfigNode initialNode)
+		public override void Restore(ConfigNode initialNode)
 		{
 			Part p = partToUpdate();
 			//get engine node
@@ -68,19 +69,21 @@ namespace SpaceRace
 			}
 		}
 
-		public override void OnLoad(ConfigNode node)
+		public override void OnLoadIntialNode(ConfigNode node)
 		{
-			base.OnLoad(node);
-			//try to load the partprefab infos
+			base.OnLoadIntialNode(node);
+			//load the partprefab infos
 			foreach (ConfigNode techValue in node.GetNodes("TECH-VALUE"))
 			{
 				if (allValues == null) allValues = new List<MUE_TechValue>();
 				allValues.Add(new MUE_TechValue(techValue));
 			}
+		}
 
-			//don't load if in editor: it's ok to maj
-			if (HighLogic.LoadedSceneIsEditor) return;
-			//is persisted?
+		public override void OnLoadInFlight(ConfigNode node)
+		{
+			base.OnLoadInFlight(node);
+			//info is here?
 			if (node.GetValue("vacIsp") != null)
 			{
 				setIspThrustFuelFLow(part,

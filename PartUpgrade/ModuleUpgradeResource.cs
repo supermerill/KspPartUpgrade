@@ -24,7 +24,7 @@ using UnityEngine;
 
 namespace SpaceRace
 {
-	class ModuleUpgradeResource : ModuleUpgradeMonoValue
+	public class ModuleUpgradeResource : ModuleUpgradeMonoValue
 	{
 		[KSPField]
 		public string resourceName;
@@ -119,9 +119,9 @@ namespace SpaceRace
 			return builder.ToString();
 		}
 
-		public override void restore(Part p, ConfigNode initialNode)
+		public override void Restore(Part p, ConfigNode initialNode)
 		{
-			Debug.Log("[MUR] restore " + p.name + " rn=" + resourceName);
+			Debug.Log("[MUR] Restore " + p.name + " rn=" + resourceName);
 			//get the resource node
 			PartResource resource = p.Resources[resourceName];
 			if (p == null) return;
@@ -129,7 +129,7 @@ namespace SpaceRace
 			{
 				foreach (ConfigNode resourceNode in initialNode.GetNodes("RESOURCE"))
 				{
-					//Debug.Log("[MUR] restore  node name : '" + resourceNode.GetValue("name") + "' ? '" + resourceName + "'");
+					//Debug.Log("[MUR] Restore  node name : '" + resourceNode.GetValue("name") + "' ? '" + resourceName + "'");
 					if (resourceNode.GetValue("name") == resourceName)
 					{
 						//find!
@@ -181,14 +181,13 @@ namespace SpaceRace
 
 		}
 
-		//done before the resoruce Loading ... so it's a bit useless.
-		public override void OnLoad(ConfigNode node)
+		//done before the resource Loading ... so it's a bit useless.
+		public override void OnLoadInFlight(ConfigNode node)
 		{
-			base.OnLoad(node);
-			Debug.Log("[MUR] load in ?" + HighLogic.LoadedScene);
+			base.OnLoadInFlight(node);
 			PartResource resource = part.Resources[resourceName];
 			//in flight ?
-			if (node.GetValue("present") != null && !HighLogic.LoadedSceneIsEditor)
+			if (node.GetValue("present") != null)
 			{
 				if (bool.Parse(node.GetValue("present")))
 				{
@@ -214,9 +213,8 @@ namespace SpaceRace
 						resource.enabled = false;
 						resource.amount = 0;
 						resource.maxAmount = 0;
-						//i think it doesn't work for the same reason as below : 
-						//  need to do that after reseource loading, not before.
-						//bored
+						//i think it doesn't work because I need to do that after reseource loading, not before.
+						//bored, maybe i will do it and test it an other week
 
 					}
 				}

@@ -19,30 +19,64 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace SpaceRace
 {
-	abstract class ModuleUpgrade : PartModule
+	public abstract class ModuleUpgrade : PartModule
 	{
+
+		/**
+		 * Set it to false to desactivate persistance
+		 * */
+		[KSPField(isPersistant = true)]
+		public bool persitance = true;
 
 		/*
 		 * Method to override to upgrade your part.
 		 * Please use the tech name list to check what upgrade to use.
 		 * */
-		public abstract virtual void upgrade(List<string> allTechName);
+		public abstract void Upgrade(List<string> allTechName);
 
 		/*
-		 * Method to override to restore your part before an upgrade.
-		 * Use the ConfigNode of your part to get your restore data.
+		 * Method to override to Restore your part before an upgrade.
+		 * Use the ConfigNode of your part to get your Restore data.
 		 * */
-		public abstract virtual void restore(ConfigNode initialNode);
+		public abstract void Restore(ConfigNode initialNode);
+
+		/*
+		 * Method to override to load complex data stored in cfg.
+		 * */
+		public virtual void OnLoadIntialNode(ConfigNode node) { }
+
+		/*
+		 * Method to override to load persited data. It's only called if persistant and if the vessel is in flight.
+		 * */
+		public virtual void OnLoadInFlight(ConfigNode node) { }
 
 
 		// utility method, old code from when i think i could use stub part to upgrade the real part.
-		//you can use part directly in your code if you wish, it must be the same.
+		//you can use "this.part" directly in your code.
 		public Part partToUpdate()
 		{
 			return part.partInfo.partPrefab;
+		}
+
+		public override void OnLoad(ConfigNode node)
+		{
+			base.OnLoad(node);
+			//load part prefab
+			if (HighLogic.LoadedScene == GameScenes.LOADING)
+			{
+				OnLoadIntialNode(node);
+			}
+
+			//load only in flight and if persitance is set to true
+			// if a subclass doesn't want to load at vessel creation, he can use "if(vessel!=null)"
+			if (HighLogic.LoadedSceneIsFlight && persitance)
+			{
+				OnLoadInFlight(node);
+			}
 		}
 
 		//utility save/load methods

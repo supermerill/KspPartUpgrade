@@ -24,7 +24,7 @@ using System.Text;
 
 namespace SpaceRace
 {
-	class ModuleUpgradeMass : ModuleUpgradeMonoValue
+	public class ModuleUpgradeMass : ModuleUpgradeMonoValue
 	{
 
 		public override void upgradeValue(Part p, float value)
@@ -32,18 +32,22 @@ namespace SpaceRace
 			p.partInfo.partPrefab.mass = value;
 		}
 
-		public override void restore(Part p, ConfigNode initialNode)
+		public override void Restore(Part p, ConfigNode initialNode)
 		{
 			p.partInfo.partPrefab.mass = float.Parse(initialNode.GetValue("mass"));
 		}
 
-		public override void OnLoad(ConfigNode node)
+		public override void OnLoadInFlight(ConfigNode node)
 		{
-			base.OnLoad(node);
-			string val = node.GetValue("mass");
-			if (val != null)
-			{
-				part.mass = float.Parse(val);
+			base.OnLoadInFlight(node);
+			//do not load at pre-prelaunch (vessel creation) to let IPartMassModifier modify the mass 
+			//TODO: to something for KCT (as the mass is updated at vab "launch", because vessel creation is at rollout)
+			if (vessel != null) { 
+				string val = node.GetValue("mass");
+				if (persitance && val != null)
+				{
+					part.mass = float.Parse(val);
+				}
 			}
 		}
 

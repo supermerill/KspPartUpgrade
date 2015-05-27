@@ -38,13 +38,12 @@ namespace SpaceRace
 		public string tech = "";
 
 
-		public override void upgrade(List<string> allTechName)
+		public override void Upgrade(List<string> allTechName)
 		{
 				if (allTechName.Contains(tech))
 				{
 					Part p = partToUpdate();
 					Debug.Log("[MUT] upgrade title tech : " + tech + " : " + p.partInfo.title+" + "+addSuffix + " . " + newTitle);
-					//AvailablePart aPart = PartLoader.getPartInfoByName(partName);
 					if (newTitle != "")
 					{
 						p.partInfo.title = newTitle;
@@ -54,13 +53,14 @@ namespace SpaceRace
 						p.partInfo.title += addSuffix;
 					}
 					Debug.Log("[MUT] upgrade title after : " + tech + " : " + p.partInfo.title);
-					//TODO: redo the partinfo
+					//TODO: redo the partinfo ? do something to make it work!
 				}
 		}
 
-		public override void restore(ConfigNode initialNode)
+		public override void Restore(ConfigNode initialNode)
 		{
-			partToUpdate().partInfo.title = initialNode.GetValue("title");
+			if (persitance)
+				partToUpdate().partInfo.title = initialNode.GetValue("title");
 		}
 
 
@@ -68,10 +68,10 @@ namespace SpaceRace
 		public override void OnSave(ConfigNode node)
 		{
 			base.OnSave(node);
-			foreach(BaseField field in part.Fields)
-			{
-				Debug.Log("[MUT] field" + field.name + " " + field.guiName + " => " + field.host);
-			}
+			//foreach(BaseField field in part.Fields)
+			//{
+			//	Debug.Log("[MUT] field" + field.name + " " + field.guiName + " => " + field.host);
+			//}
 		}
 
 	}
