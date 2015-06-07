@@ -41,7 +41,7 @@ namespace SpaceRace
 				//check tech (or SANDBOX mode)
 				if (val.tech != null && (allTechName.Contains(val.tech) || HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX))
 				{
-					setIspThrustFuelFLow(p, val.minThrust, val.maxThrust, val.atmosphereIsp, val.vacuumIsp);
+					setIspThrustFuelFLow(p, val.minThrust, val.maxThrust, val.atmosphereIsp, val.vacuumIsp, val.heatProduction);
 					majInfo(p, getModuleEngines(p));
 					break;
 				}
@@ -65,7 +65,9 @@ namespace SpaceRace
 						float.Parse(intialModuleNode.GetValue("minThrust")),
 						float.Parse(intialModuleNode.GetValue("maxThrust")),
 						ispCurve.Curve.keys[1].value,
-						ispCurve.Curve.keys[0].value);
+						ispCurve.Curve.keys[0].value,
+						float.Parse(intialModuleNode.GetValue("heatProduction"))
+						);
 					majInfo(p, getModuleEngines(p));
 				}
 			}
@@ -92,7 +94,9 @@ namespace SpaceRace
 							float.Parse(node.GetValue("minThrust")),
 							float.Parse(node.GetValue("maxThrust")),
 							float.Parse(node.GetValue("atmoIsp")),
-							float.Parse(node.GetValue("vacIsp")));
+							float.Parse(node.GetValue("vacIsp")),
+							float.Parse(node.GetValue("heatProduction"))
+							);
 			}
 		}
 
@@ -107,6 +111,7 @@ namespace SpaceRace
 			node.AddValue("maxFuelFlow", mod.maxFuelFlow);
 			node.AddValue("atmoIsp", mod.atmosphereCurve.Curve.keys[1].value);
 			node.AddValue("vacIsp", mod.atmosphereCurve.Curve.keys[0].value);
+			node.AddValue("heatProduction", mod.heatProduction);
 		}
 
 		public static ModuleEngines getModuleEngines(Part p)
@@ -119,15 +124,23 @@ namespace SpaceRace
 			return null;
 		}
 
-		public static void setIspThrustFuelFLow(Part p, float minThrust, float maxThrust, float atmoIsp, float vacuumIsp)
+		public static void setIspThrustFuelFLow(Part p, float minThrust, float maxThrust,
+			float atmoIsp, float vacuumIsp, float heatProduction)
 		{
 			//get module
 			ModuleEngines me = getModuleEngines(p);
 			Debug.Log("[MUE] setIspThrustFuelFLow with enine  " + me + " for part " + p.partName);
 
+			//heat production
+			if (heatProduction >= 0)
+				me.heatProduction = heatProduction;
+
+
 			// ----- change thrust (for info => trust is compute from ips & fuelflow)
-			me.minThrust = minThrust;
-			me.maxThrust = maxThrust;
+			if (minThrust >= 0)
+				me.minThrust = minThrust;
+			if (maxThrust >= 0)
+				me.maxThrust = maxThrust;
 			Debug.Log("[MUE] setIspThrustFuelFLow thrust setted to  " + me.maxThrust);
 
 			// ----  change isp
@@ -140,11 +153,14 @@ namespace SpaceRace
 			//}
 
 			//set?
+			//TODO: better tangent calculus
 			int i = 0;
-			newCurve.Add(new Keyframe(me.atmosphereCurve.Curve.keys[i].time, vacuumIsp,
+			newCurve.Add(new Keyframe(me.atmosphereCurve.Curve.keys[i].time,
+				(vacuumIsp >= 0 ? vacuumIsp : me.atmosphereCurve.Curve.keys[i].value),
 				me.atmosphereCurve.Curve.keys[i].inTangent, me.atmosphereCurve.Curve.keys[i].outTangent));
 			i++;
-			newCurve.Add(new Keyframe(me.atmosphereCurve.Curve.keys[i].time, atmoIsp,
+			newCurve.Add(new Keyframe(me.atmosphereCurve.Curve.keys[i].time,
+				(atmoIsp >= 0 ? atmoIsp : me.atmosphereCurve.Curve.keys[i].value),
 				me.atmosphereCurve.Curve.keys[i].inTangent, me.atmosphereCurve.Curve.keys[i].outTangent));
 			i++;
 			//copy the other keys
@@ -201,24 +217,37 @@ namespace SpaceRace
 		public string tech = null;
 
 		//[KSPField]
-		public float vacuumIsp = 0;
+		public float vacuumIsp = -1;
 
 		//[KSPField]
-		public float atmosphereIsp = 0;
+		public float atmosphereIsp = -1;
 
 		//[KSPField]
-		public float maxThrust = 0;
+		public float maxThrust = -1;
 
 		//[KSPField]
-		public float minThrust = 0;
+		public float minThrust = -1;
+
+		public float heatProduction = -1;
 
 		public MUE_TechValue(ConfigNode node)
 		{
 			tech = node.GetValue("tech");
-			minThrust = float.Parse(node.GetValue("minThrust"));
-			maxThrust = float.Parse(node.GetValue("maxThrust"));
-			atmosphereIsp = float.Parse(node.GetValue("atmosphereIsp"));
-			vacuumIsp = float.Parse(node.GetValue("vacuumIsp"));
+			string tempValue = node.GetValue("minThrust");
+			if (tempValue != null)
+				minThrust = float.Parse(tempValue);
+			tempValue = node.GetValue("maxThrust");
+			if (tempValue != null)
+				maxThrust = float.Parse(tempValue);
+			tempValue = node.GetValue("atmosphereIsp");
+			if (tempValue != null)
+				atmosphereIsp = float.Parse(tempValue);
+			tempValue = node.GetValue("vacuumIsp");
+			if (tempValue != null)
+				vacuumIsp = float.Parse(tempValue);
+			tempValue = node.GetValue("heatProduction");
+			if (tempValue != null)
+				heatProduction = float.Parse(tempValue);
 		}
 
 	}

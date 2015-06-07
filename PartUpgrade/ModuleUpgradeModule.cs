@@ -254,7 +254,8 @@ namespace SpaceRace
 				//if (!persisted)
 				{
 					configModule = node.GetNodes("MODULE");
-					Debug.Log("[MUM] load prefab : " + configModule);
+					Debug.Log("[MUM] load prefab : " + configModule + " @ " + this.tech + "/" + this.type + "/" + this.id 
+						);
 				}
 			}
 		}
@@ -263,7 +264,7 @@ namespace SpaceRace
 		public override void OnLoadInFlight(ConfigNode root)
 		{
 			base.OnLoadInFlight(root);
-			//Debug.Log("[MUM] load : " + root + " for " + configModule + " in editor? " + HighLogic.LoadedSceneIsEditor);
+			Debug.Log("[MUM] load : " + root + " for " + configModule + " in editor? " + HighLogic.LoadedSceneIsEditor);
 			if (configModule == null)
 			{
 				{
@@ -471,19 +472,23 @@ namespace SpaceRace
 			base.OnSave(node);
 			try
 			{
-				Debug.Log("[MUM] on save " + tech + "/" + type + "/" + id);
+				Debug.Log("[MUM] on save " + tech + "/" + type + "/" + id );
+
 				//no persisted data yet?
 				if (this.configModule == null)
 				{
+					//vab strange beaviour debug
+					if (part.partInfo.partPrefab == part) return;
+
 					//get perssited data from partprefab
 					//PartModule pm2 = part.partInfo.partPrefab.Modules[part.Modules.IndexOf(this)];
 					ModuleUpgradeModule mum = null;
 					foreach (ModuleUpgradeModule infoMod in part.partInfo.partPrefab.Modules.GetModules<ModuleUpgradeModule>())
 					{
-						Debug.LogError("[MUM] search partmodule from info : " + infoMod.tech + "/" + infoMod.type + "/" + infoMod.id);
+						Debug.Log("[MUM] search partmodule from info : " + infoMod.tech + "/" + infoMod.type + "/" + infoMod.id);
 						if (infoMod.tech == tech && infoMod.type == type && infoMod.id == id)
 						{
-							Debug.LogError("[MUM] find partmodule from info ! ");
+							Debug.Log("[MUM] find partmodule from info ! " + " (id_lol:" + infoMod.id_lol + ")");
 							mum = infoMod;
 							break;
 						}
