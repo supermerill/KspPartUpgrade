@@ -35,37 +35,37 @@ namespace SpaceRace
 
 		public override void upgradeValue(Part p, float value)
 		{
-			Debug.Log("[MUR] upgradeValue " + p.name + " rn=" + resourceName);
+			//Debug.log("[MUR] upgradeValue " + p.name + " rn=" + resourceName);
 			if (resourceName == null || resourceName.Length == 0) return;
 			foreach (PartResource pr in p.Resources)
 			{
-				Debug.Log("[MUR] has resource " + pr.resourceName + ", " + pr.maxAmount);
+				//Debug.log("[MUR] has resource " + pr.resourceName + ", " + pr.maxAmount);
 			}
 			PartResource resource = p.Resources[resourceName];
 			if (resource == null)
 			{
 				//create the resource
 				resource = addResource(p, resourceName, value, value);
-				Debug.Log("[MUR] addresource");
+				//Debug.log("[MUR] addresource");
 				if (resource == null)
 				{
-					Debug.LogError("Error: cannot add resource " + resourceName + " to " + p.name + " because this resource don't exist.");
+					//Debug.logError("Error: cannot add resource " + resourceName + " to " + p.name + " because this resource don't exist.");
 					return;
 				}
 				AvailablePart.ResourceInfo newInfo = new AvailablePart.ResourceInfo();
 				newInfo.resourceName = addSpaces(resource.resourceName);
 				p.partInfo.resourceInfos.Add(newInfo);
-				Debug.Log("[MUR] addresource info : " + newInfo.resourceName);
+				//Debug.log("[MUR] addresource info : " + newInfo.resourceName);
 			}
 			else
 			{
 				resource.maxAmount = (float)(/*resource.maxAmount + */value);
 				resource.amount = (float)(/*resource.amount + */value);
-				Debug.Log("[MUR] better amount ");
+				//Debug.log("[MUR] better amount ");
 			}
 			foreach (PartResource pr in p.Resources)
 			{
-				Debug.Log("[MUR] has resource (before) " + pr.resourceName + ", " + pr.maxAmount);
+				//Debug.log("[MUR] has resource (before) " + pr.resourceName + ", " + pr.maxAmount);
 			}
 			//reload partinfo
 			updateInfo(p, resource);
@@ -122,7 +122,7 @@ namespace SpaceRace
 
 		public override void Restore(Part p, ConfigNode initialNode)
 		{
-			Debug.Log("[MUR] Restore " + p.name + " rn=" + resourceName);
+			//Debug.log("[MUR] Restore " + p.name + " rn=" + resourceName);
 			//get the resource node
 			PartResource resource = p.Resources[resourceName];
 			if (p == null) return;
@@ -130,7 +130,7 @@ namespace SpaceRace
 			{
 				foreach (ConfigNode resourceNode in initialNode.GetNodes("RESOURCE"))
 				{
-					//Debug.Log("[MUR] Restore  node name : '" + resourceNode.GetValue("name") + "' ? '" + resourceName + "'");
+				 //Debug.log("[MUR] Restore  node name : '" + resourceNode.GetValue("name") + "' ? '" + resourceName + "'");
 					if (resourceNode.GetValue("name") == resourceName)
 					{
 						//find!
@@ -138,19 +138,19 @@ namespace SpaceRace
 						resource.amount = double.Parse(resourceNode.GetValue("amount"));
 						//reload partinfo
 						updateInfo(p, resource);
-						Debug.Log("[MUR] reset " + resource.resourceName + " resource at " + resource.amount + " / " + resource.maxAmount);
+						//Debug.log("[MUR] reset " + resource.resourceName + " resource at " + resource.amount + " / " + resource.maxAmount);
 						return;
 					}
 				}
 				//can't find : remove
-				Debug.Log("[MUR] remove resource Before (count) : " + p.Resources.Count + " ? " + p.Resources.list.Count);
+				//Debug.log("[MUR] remove resource Before (count) : " + p.Resources.Count + " ? " + p.Resources.list.Count);
 				removeResource(resource, p);
-				Debug.Log("[MUR] remove resource After (count) : " + p.Resources.Count + " ? " + p.Resources.list.Count);
+				//Debug.log("[MUR] remove resource After (count) : " + p.Resources.Count + " ? " + p.Resources.list.Count);
 
 			}
 			else
 			{
-				Debug.Log("[MUR] can't find the resource " + resourceName);
+				Debug.LogError("[MUR] can't find the resource " + resourceName);
 			}
 		}
 
@@ -210,7 +210,7 @@ namespace SpaceRace
 						//removeResource(resource, part);
 						//can't remove gui / need to find a way
 						//this work, anyway.
-						Debug.Log("[MUR] load in flight (rem) " + resource.maxAmount);
+						//Debug.log("[MUR] load in flight (rem) " + resource.maxAmount);
 						resource.enabled = false;
 						resource.amount = 0;
 						resource.maxAmount = 0;
@@ -250,7 +250,7 @@ namespace SpaceRace
 				{
 					if (info.resourceName.Equals(addSpaces(resource.resourceName)))
 					{
-						Debug.Log("[MUR] remove!!! info.resourceName = '" + info.resourceName + "'");
+						//Debug.log("[MUR] remove!!! info.resourceName = '" + info.resourceName + "'");
 						p.partInfo.resourceInfos.Remove(info);
 						break;
 					}

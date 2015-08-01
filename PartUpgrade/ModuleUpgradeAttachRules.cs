@@ -30,32 +30,32 @@ namespace SpaceRace
 		//attachRules = 1,1,1,1,0
 		public override void upgradeValue(Part p, string value)
 		{
-			Debug.Log("[MUAR] upgradeValue : " + value);
+			//Debug.log("[MUAR] upgradeValue : " + value);
 			string oih = value.Replace(" ", "");
 			string[] all = value.Replace(" ", "").Split(new char[] { ',' });
 			if (all.Length > 0)
 			{
-				Debug.Log("[MUAR] stack : " + p.attachRules.stack + " => " + (all[0] == "1"));
+				//Debug.log("[MUAR] stack : " + p.attachRules.stack + " => " + (all[0] == "1"));
 				p.attachRules.stack = all[0] == "1";
 			}
 			if (all.Length > 1)
 			{
-				Debug.Log("[MUAR] srfAttach : " + p.attachRules.srfAttach + " => " + (all[1] == "1"));
+				//Debug.log("[MUAR] srfAttach : " + p.attachRules.srfAttach + " => " + (all[1] == "1"));
 				p.attachRules.srfAttach = all[1] == "1";
 			}
 			if (all.Length > 2)
 			{
-				Debug.Log("[MUAR] allowStack : " + p.attachRules.allowStack + " => " + (all[2] == "1"));
+				//Debug.log("[MUAR] allowStack : " + p.attachRules.allowStack + " => " + (all[2] == "1"));
 				p.attachRules.allowStack = all[2] == "1";
 			}
 			if (all.Length > 3)
 			{
-				Debug.Log("[MUAR] allowSrfAttach : " + p.attachRules.allowSrfAttach + " => " + (all[3] == "1"));
+				//Debug.log("[MUAR] allowSrfAttach : " + p.attachRules.allowSrfAttach + " => " + (all[3] == "1"));
 				p.attachRules.allowSrfAttach = all[3] == "1";
 			}
 			if (all.Length > 4)
 			{
-				Debug.Log("[MUAR] allowCollision : " + p.attachRules.allowCollision + " => " + (all[4] == "1"));
+				//Debug.log("[MUAR] allowCollision : " + p.attachRules.allowCollision + " => " + (all[4] == "1"));
 				p.attachRules.allowCollision = all[4] == "1";
 			}
 			

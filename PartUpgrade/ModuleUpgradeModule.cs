@@ -62,20 +62,18 @@ namespace SpaceRace
 		//called only in the prefab
 		public override void Upgrade(List<string> allTechName)
 		{
-			Debug.Log("[MUM] upgrade a module ? " + moduleName
-				+ ", " + tech + ", " + allTechName.Contains(tech) + ", " + (HighLogic.CurrentGame.Mode != Game.Modes.SANDBOX));
+			//Debug.log("[MUM0] upgrade a module ? " + moduleName+ ", " + tech + ", " + allTechName.Contains(tech) + ", " + (HighLogic.CurrentGame.Mode != Game.Modes.SANDBOX));
 
 			if (moduleName == null || moduleName.Length == 0 || tech == null
 				|| (!allTechName.Contains(tech) && HighLogic.CurrentGame.Mode != Game.Modes.SANDBOX)) return;
 			Part p = partToUpdate();
 
-			Debug.Log("[MUM] upgrade the partPrefab ? " + (p == part) + " ? " + (p == part.partInfo.partPrefab)
-				+ " " + configModule);
+			//Debug.log("[MUM] upgrade the partPrefab ? " + (p == part) + " ? " + (p == part.partInfo.partPrefab)+ " " + configModule);
 
 
 			foreach (ConfigNode config in configModule)
 			{
-				Debug.Log("[MUM] upgrade a module  " + p.name + " , " + p.partInfo.moduleInfos.Count + "/ " + p.Modules.Count + " , " + type);
+				//Debug.log("[MUM] upgrade a module  " + p.name + " , " + p.partInfo.moduleInfos.Count + "/ " + p.Modules.Count + " , " + type);
 				//get the module
 				if (type.Equals("replace"))
 				{
@@ -85,11 +83,11 @@ namespace SpaceRace
 						//ConfigNode node = new ConfigNode();
 						PartModule mod = p.Modules[config.GetValue("name")];
 						//mod.Save(node);
-						//Debug.Log("[MUM] before : " + node);
+						////Debug.log("[MUM] before : " + node);
 						mod.Load(config);
 						//node = new ConfigNode(); mod.Save(node);
-						//Debug.Log("[MUM] after : " + node);
-						Debug.Log("[MUM] after (info) : " + mod.GetInfo());
+						////Debug.log("[MUM] after : " + node);
+						//Debug.log("[MUM] after (info) : " + mod.GetInfo());
 						for (int i = 0; i < part.partInfo.moduleInfos.Count; i++)
 						{
 							AvailablePart.ModuleInfo info = part.partInfo.moduleInfos[i];
@@ -101,7 +99,7 @@ namespace SpaceRace
 					}
 					catch (Exception e)
 					{
-						Debug.Log("[MUM] can't MODIFY " + e);
+						//Debug.log("[MUM] can't MODIFY " + e);
 					}
 				}
 				else if (type.Equals("create"))
@@ -109,27 +107,27 @@ namespace SpaceRace
 					try
 					{
 						PartModule mod = createModule(p, config);
-						Debug.Log("[MUM] added : " + mod);
+						//Debug.log("[MUM] added : " + mod);
 					}
 					catch (Exception e)
 					{
-						Debug.Log("[MUM] can't ADD " + e);
+						//Debug.log("[MUM] can't ADD " + e);
 					}
 				}
 				else if (type.Equals("delete"))
 				{
 					try
 					{
-						Debug.Log("[MUM] delete : " + p.Modules[config.GetValue("name")]);
+						//Debug.log("[MUM] delete : " + p.Modules[config.GetValue("name")]);
 						removeModuleAndInfo(p, p.Modules[config.GetValue("name")]);
 
 					}
 					catch (Exception e)
 					{
-						Debug.Log("[MUM] can't REMOVE " + e);
+						//Debug.log("[MUM] can't REMOVE " + e);
 					}
 				}
-				Debug.Log("[MUM] relance ");
+				//Debug.log("[MUM] relance ");
 			}
 		}
 
@@ -139,11 +137,11 @@ namespace SpaceRace
 
 			Part p = partToUpdate();
 
-			//Debug.Log("[MUM] Restore '" + configModule + "' for initialNode node :" + initialNode);
+			////Debug.log("[MUM] Restore '" + configModule + "' for initialNode node :" + initialNode);
 			foreach (ConfigNode config in configModule)
 			{
 				string moduleUpgradeName = config.GetValue("name");
-				//Debug.Log("[MUM] Restore a module  " + config.GetValue("name") + " " + p.partInfo.moduleInfos.Count + "/ "
+				////Debug.log("[MUM] Restore a module  " + config.GetValue("name") + " " + p.partInfo.moduleInfos.Count + "/ "
 				//	+ p.Modules.Count + " , " + type + " persisted=" + persisted);
 				if (type.Equals("replace"))
 				{
@@ -158,10 +156,10 @@ namespace SpaceRace
 							//get the node in the initialNode
 							foreach (ConfigNode intialModuleNode in initialNode.GetNodes("MODULE"))
 							{
-								//Debug.Log("[MUM] search module " + intialModuleNode.GetValue("name"));
+								////Debug.log("[MUM] search module " + intialModuleNode.GetValue("name"));
 								if (intialModuleNode.GetValue("name") == moduleUpgradeName)
 								{
-									Debug.Log("[MUM] Restore: replace values in " + moduleUpgradeName);
+									//Debug.log("[MUM] Restore: replace values in " + moduleUpgradeName);
 									mod.Load(intialModuleNode);
 								}
 							}
@@ -178,7 +176,7 @@ namespace SpaceRace
 					}
 					catch (Exception e)
 					{
-						Debug.Log("[MUM] can't MODIFY " + p.Modules.Count + " : " + e);
+						//Debug.log("[MUM] can't MODIFY " + p.Modules.Count + " : " + e);
 					}
 				}
 				else if (type.Equals("delete"))
@@ -189,12 +187,12 @@ namespace SpaceRace
 						if (!p.Modules.Contains(moduleUpgradeName))
 						{
 
-							Debug.Log("[MUM] Restore : delete " + moduleUpgradeName);
+							//Debug.log("[MUM] Restore : delete " + moduleUpgradeName);
 							PartModule module = createModule(p, config);
 							//TODO: test if null.
 							if (module == null)
 							{
-								Debug.LogError("[MUM] Error : can't recreate the partmodule " + moduleUpgradeName);
+								//Debug.logError("[MUM] Error : can't recreate the partmodule " + moduleUpgradeName);
 							}
 
 							//DONT DO THAT \/, it mess the name/index map of Parmodulelist
@@ -214,12 +212,12 @@ namespace SpaceRace
 						}
 						else
 						{
-							Debug.Log("[MUM] not create from Restore delete because module already here");
+							//Debug.log("[MUM] not create from Restore delete because module already here");
 						}
 					}
 					catch (Exception e)
 					{
-						Debug.Log("[MUM] can't ADD (from Restore of delete) " + e);
+						//Debug.log("[MUM] can't ADD (from Restore of delete) " + e);
 					}
 				}
 				else if (type.Equals("create"))
@@ -229,17 +227,17 @@ namespace SpaceRace
 						//do not del if not here
 						if (p.Modules.Contains(moduleUpgradeName))
 						{
-							Debug.Log("[MUM] delete : " + type);
+							//Debug.log("[MUM] delete : " + type);
 							removeModuleAndInfo(p, p.Modules[moduleUpgradeName]);
 						}
 						else
 						{
-							Debug.Log("[MUM] do not del (Restore create) because it's not inside");
+							//Debug.log("[MUM] do not del (Restore create) because it's not inside");
 						}
 					}
 					catch (Exception e)
 					{
-						Debug.Log("[MUM] can't REMOVE (from Restore of create) " + p.Modules.Count);
+						//Debug.log("[MUM] can't REMOVE (from Restore of create) " + p.Modules.Count);
 					}
 				}
 			}
@@ -254,8 +252,7 @@ namespace SpaceRace
 				//if (!persisted)
 				{
 					configModule = node.GetNodes("MODULE");
-					Debug.Log("[MUM] load prefab : " + configModule + " @ " + this.tech + "/" + this.type + "/" + this.id 
-						);
+					//Debug.log("[MUM] load prefab : " + configModule + " @ " + this.tech + "/" + this.type + "/" + this.id );
 				}
 			}
 		}
@@ -264,11 +261,11 @@ namespace SpaceRace
 		public override void OnLoadInFlight(ConfigNode root)
 		{
 			base.OnLoadInFlight(root);
-			Debug.Log("[MUM] load : " + root + " for " + configModule + " in editor? " + HighLogic.LoadedSceneIsEditor);
+			//Debug.log("[MUM] load : " + root + " for " + configModule + " in editor? " + HighLogic.LoadedSceneIsEditor);
 			if (configModule == null)
 			{
 				{
-					Debug.Log("[MUM] load persisted configModule");
+					//Debug.log("[MUM] load persisted configModule");
 					//put data from config node to modules
 					try
 					{
@@ -279,8 +276,7 @@ namespace SpaceRace
 						{
 							string moduleUpgradeName = config.GetValue("name");
 							numMod++;
-							Debug.Log("[MUM] on load in flight, module name: " + moduleUpgradeName
-								+ " => " + config.HasData + " " + config.CountValues);
+							//Debug.log("[MUM] on load in flight, module name: " + moduleUpgradeName+ " => " + config.HasData + " " + config.CountValues);
 							if (config.CountValues > 1)
 							{
 								//more than "name"
@@ -289,7 +285,7 @@ namespace SpaceRace
 								string isDel = config.GetValue("del");
 								if (isDel != null && bool.Parse(isDel))
 								{
-									Debug.Log("[MUM] Delete it");
+									//Debug.log("[MUM] Delete it");
 									if (part.Modules.Contains(moduleUpgradeName))
 									{
 										//this module mustn't be here
@@ -297,8 +293,7 @@ namespace SpaceRace
 									}
 									else
 									{
-										Debug.LogError("[MUM] Error in loading a not-upgraded upgraded part: can't erase a module with name " +
-											moduleUpgradeName + " as it's not in the current part.");
+										//Debug.logError("[MUM] Error in loading a not-upgraded upgraded part: can't erase a module with name " + moduleUpgradeName + " as it's not in the current part.");
 									}
 									//i didn't need to load it, as it's deleted.
 									continue;
@@ -309,24 +304,24 @@ namespace SpaceRace
 								{
 									try
 									{
-										Debug.Log("[MUM] recreate a module from onload : " + moduleUpgradeName);
-										Debug.Log("[MUM] search in prefab the init values : " + part.partInfo.partPrefab.Modules.Count);
+										//Debug.log("[MUM] recreate a module from onload : " + moduleUpgradeName);
+										//Debug.log("[MUM] search in prefab the init values : " + part.partInfo.partPrefab.Modules.Count);
 										//go to part prefab configModule to get the module config
 										foreach (ModuleUpgradeModule infoMod in part.partInfo.partPrefab.Modules.GetModules<ModuleUpgradeModule>())
 										{
 											//check if the same (tech & id)
 											if (infoMod.tech == tech && infoMod.type == type && infoMod.id == id)
 											{
-												Debug.Log("[MUM] find the good moduleupgrade! : " + infoMod.id);
+												//Debug.log("[MUM] find the good moduleupgrade! : " + infoMod.id);
 												//find the good node
 												foreach (ConfigNode config2 in infoMod.configModule)
 												{
-													Debug.Log("[MUM] search a node : " + config2.GetValue("name"));
+													//Debug.log("[MUM] search a node : " + config2.GetValue("name"));
 													if (config2.GetValue("name") == moduleUpgradeName)
 													{
 														//find! 
 														//create the module (without the partinfo)
-														Debug.Log("[MUM] find a good node!");
+														//Debug.log("[MUM] find a good node!");
 														PartModule mud = createModule(part, config2, false);
 
 														break;
@@ -335,17 +330,17 @@ namespace SpaceRace
 											}
 										}
 										//the loading occur a bit below.
-										Debug.Log("[MUM] readd! : " + moduleUpgradeName);
+										//Debug.log("[MUM] readd! : " + moduleUpgradeName);
 									}
 									catch (Exception e)
 									{
-										Debug.LogError("[MUM] fail to recreate a module (onload): " + e);
+										//Debug.logError("[MUM] fail to recreate a module (onload): " + e);
 									}
 								}
 
 								try
 								{
-									Debug.Log("[MUM] can load upgrade? : " + part.Modules.Contains(moduleUpgradeName));
+									//Debug.log("[MUM] can load upgrade? : " + part.Modules.Contains(moduleUpgradeName));
 									if (part.Modules.Contains(moduleUpgradeName))
 									{
 										//this module mustn't be here
@@ -356,8 +351,7 @@ namespace SpaceRace
 											{
 												if (field.IsDefined(typeof(KSPField), true))
 												{
-													Debug.Log("[MUM] onload: " + field.FieldType.Name + " " + field.Name + " : "
-														+ field.GetValue(mod) + " => " + config.GetValue(field.Name));
+													//Debug.log("[MUM] onload: " + field.FieldType.Name + " " + field.Name + " : " + field.GetValue(mod) + " => " + config.GetValue(field.Name));
 													if (field.FieldType == typeof(string))
 													{
 														field.SetValue(mod, config.GetValue(field.Name));
@@ -438,28 +432,27 @@ namespace SpaceRace
 											}
 											catch (Exception e)
 											{
-												Debug.Log("Warn: can't set the field " + field.Name + " : " + field.FieldType.Name
-													+ " with node value of " + config.GetValue(field.Name));
+												//Debug.log("Warn: can't set the field " + field.Name + " : " + field.FieldType.Name + " with node value of " + config.GetValue(field.Name));
 											}
 										}
+										//TODO: "reload" the mod => onstart, onload?
 									}
 									else
 									{
-										Debug.LogError("[MUM] Error in loading an mostly upgraded part: can't find the module with name "
-											+ moduleUpgradeName);
+										//Debug.logError("[MUM] Error in loading an mostly upgraded part: can't find the module with name " + moduleUpgradeName);
 									}
 
 								}
 								catch (Exception e)
 								{
-									Debug.LogError("error when load getting mod : " + e);
+									//Debug.logError("error when load getting mod : " + e);
 								}
 							}
 						}
 					}
 					catch (Exception e)
 					{
-						Debug.LogError("fail load!!! " + e);
+						//Debug.logError("fail load!!! " + e);
 					}
 				}
 			}
@@ -472,7 +465,7 @@ namespace SpaceRace
 			base.OnSave(node);
 			try
 			{
-				Debug.Log("[MUM] on save " + tech + "/" + type + "/" + id );
+				////Debug.log("[MUM] on save "+part.name+": " + tech + "/" + type + "/" + id );
 
 				//no persisted data yet?
 				if (this.configModule == null)
@@ -485,20 +478,20 @@ namespace SpaceRace
 					ModuleUpgradeModule mum = null;
 					foreach (ModuleUpgradeModule infoMod in part.partInfo.partPrefab.Modules.GetModules<ModuleUpgradeModule>())
 					{
-						Debug.Log("[MUM] search partmodule from info : " + infoMod.tech + "/" + infoMod.type + "/" + infoMod.id);
+						//Debug.log("[MUM] search partmodule from info : " + infoMod.tech + "/" + infoMod.type + "/" + infoMod.id);
 						if (infoMod.tech == tech && infoMod.type == type && infoMod.id == id)
 						{
-							Debug.Log("[MUM] find partmodule from info ! " + " (id_lol:" + infoMod.id_lol + ")");
+							//Debug.log("[MUM] find partmodule from info ! ");
 							mum = infoMod;
 							break;
 						}
 					}
 					if (mum == null)
 					{
-						Debug.LogError("[MUM] can't find partmodule from info.");
+						//Debug.logError("[MUM] can't find partmodule from info.");
 						return;
 					}
-					Debug.Log("[MUM] retreive partmodule from partinfo : " + mum.configModule);
+					//Debug.log("[MUM] retreive partmodule from partinfo : " + mum.configModule);
 
 					this.configModule = mum.configModule;
 					//persisted = true;
@@ -506,7 +499,8 @@ namespace SpaceRace
 				//save the config nodes
 				foreach (ConfigNode config in configModule)
 				{
-					Debug.Log("[MUM] on save, module name to save: " + config.GetValue("name"));
+					//Debug.log("[MUM] on save, module name to save: " + config.GetValue("name") + " has? " + part.Modules.Contains(config.GetValue("name")));
+					if (part.Modules.Contains(config.GetValue("name")))
 					{
 						try
 						{
@@ -528,28 +522,28 @@ namespace SpaceRace
 										if (field.IsDefined(typeof(KSPField), true) && persistedTypes.Contains(field.FieldType))
 										{
 											//TODO: save only value that can be retreived
-											Debug.Log("[MUM] Onsave: " + field.Name + " => " + field.GetValue(mod));
+											//Debug.log("[MUM] Onsave: " + field.Name + " => " + field.GetValue(mod));
 
 											moduleNode.AddValue(field.Name, field.GetValue(mod));
 										}
 									}
 									catch (Exception e)
 									{
-										Debug.LogWarning("[MUM] can't persist field : " + field.Name);
+										//Debug.logWarning("[MUM] can't persist field : " + field.Name);
 									}
 								}
 							}
 						}
 						catch (Exception e)
 						{
-							Debug.LogError("error when getting mod : " + e);
+							//Debug.logError("error when getting mod : " + e);
 						}
 					}
 				}
 			}
 			catch (Exception e)
 			{
-				Debug.LogError("fail save!!! " + e);
+				//Debug.logError("fail save!!! " + e);
 			}
 		}
 
@@ -600,7 +594,7 @@ namespace SpaceRace
 			}
 			else
 			{
-				Debug.Log("create a module done & awake KO ");
+				//Debug.log("create a module done & awake KO ");
 				return null;
 			}
 		}

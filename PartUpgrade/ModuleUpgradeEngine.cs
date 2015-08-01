@@ -32,6 +32,8 @@ namespace SpaceRace
 
 		public override void Upgrade(List<string> allTechName)
 		{
+			Debug.Log("[MUE] upgrade  ? " + part.name + " with nbTech: "+ allTechName.Count);
+			
 			//find the last ok node
 			for (int i = allValues.Count - 1; i >= 0; i--)
 			{
@@ -120,7 +122,7 @@ namespace SpaceRace
 			if (p.Modules.Contains("ModuleEngines")) pm = p.Modules["ModuleEngines"];
 			if (pm == null) pm = p.Modules["ModuleEnginesFX"];
 			if (pm != null) return pm as ModuleEngines;
-			Debug.LogError("[MUE] Error: can't find an engine in the part " + p.partName);
+			//Debug.logError("[MUE] Error: can't find an engine in the part " + p.partName);
 			return null;
 		}
 
@@ -129,7 +131,7 @@ namespace SpaceRace
 		{
 			//get module
 			ModuleEngines me = getModuleEngines(p);
-			Debug.Log("[MUE] setIspThrustFuelFLow with enine  " + me + " for part " + p.partName);
+			//Debug.log("[MUE] setIspThrustFuelFLow with engine  " + me + " for part " + p.partName);
 
 			//heat production
 			if (heatProduction >= 0)
@@ -141,7 +143,7 @@ namespace SpaceRace
 				me.minThrust = minThrust;
 			if (maxThrust >= 0)
 				me.maxThrust = maxThrust;
-			Debug.Log("[MUE] setIspThrustFuelFLow thrust setted to  " + me.maxThrust);
+			//Debug.log("[MUE] setIspThrustFuelFLow thrust setted to  " + me.minThrust + " => " + me.maxThrust);
 
 			// ----  change isp
 			List<Keyframe> newCurve = new List<Keyframe>();
@@ -173,23 +175,22 @@ namespace SpaceRace
 			}
 
 			me.atmosphereCurve = new FloatCurve(newCurve.ToArray());
-			Debug.Log("[MUE] setIspThrustFuelFLow isp0 setted to  " + me.atmosphereCurve.Curve.keys[0].value);
-			Debug.Log("[MUE] setIspThrustFuelFLow isp1 setted to  " + me.atmosphereCurve.Curve.keys[1].value);
+			//Debug.log("[MUE] setIspThrustFuelFLow isp0 setted to  " + me.atmosphereCurve.Curve.keys[0].value);
+			//Debug.log("[MUE] setIspThrustFuelFLow isp1 setted to  " + me.atmosphereCurve.Curve.keys[1].value);
 			if (me.atmosphereCurve.Curve.keys.Length > 2)
-				Debug.Log("[MUE] setIspThrustFuelFLow isp2 setted to  " + me.atmosphereCurve.Curve.keys[2].value);
+				//Debug.log("[MUE] setIspThrustFuelFLow isp2 setted to  " + me.atmosphereCurve.Curve.keys[2].value);
 
 			// ------ change fuel flow 
 			//TODO: use ModuleEngines.g? or 9.80665 ?
 			me.minFuelFlow = (float)(me.minThrust / (9.80665 * me.atmosphereCurve.Curve.keys[0].value));
 			me.maxFuelFlow = (float)(me.maxThrust / (9.80665 * me.atmosphereCurve.Curve.keys[0].value));
-			Debug.Log("[MUE] setIspThrustFuelFLow minFuelFlow setted to  " + me.minFuelFlow);
-			Debug.Log("[MUE] setIspThrustFuelFLow maxFuelFlow setted to  " + me.maxFuelFlow);
+			//Debug.log("[MUE] setIspThrustFuelFLow FuelFlow setted to  " + me.minFuelFlow + " => " + me.maxFuelFlow);
 
 			//TODO: test if really needed (old code)
 			ConfigNode cn = new ConfigNode();
 			me.OnSave(cn);
 			me.OnLoad(cn);
-			Debug.Log("[MUE] setIspThrustFuelFLow save load");
+			//Debug.log("[MUE] setIspThrustFuelFLow save load");
 		}
 
 		public static void majInfo(Part p, ModuleEngines me)

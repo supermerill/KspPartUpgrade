@@ -115,11 +115,7 @@ namespace SpaceRace
 			try
 			{
 
-				Debug.Log("[EU] reloadAndUpgrade");
-				foreach (string techName in allTechResearched)
-				{
-					Debug.Log("[EU] HAS tech " + techName);
-				}
+				//Debug.log("[EU] reloadAndUpgrade"); foreach (string techName in allTechResearched){Debug.Log("[EU] HAS tech " + techName);}
 
 				//maj part
 				foreach (AvailablePart ap in PartLoader.LoadedPartsList)
@@ -128,7 +124,7 @@ namespace SpaceRace
 					List<ModuleUpgrade> allUpgrader = new List<ModuleUpgrade>();
 					foreach (PartModule pm in ap.partPrefab.Modules)
 					{
-						//Debug.Log("[EU] get all mu : " + pm.moduleName);
+						////Debug.log("[EU] get all mu : " + pm.moduleName);
 						if (pm != null && pm is ModuleUpgrade)
 						{
 							allUpgrader.Add((ModuleUpgrade)pm);
@@ -139,7 +135,7 @@ namespace SpaceRace
 						// reset before maj
 						if (firstUgrade)
 						{
-							Debug.Log("[EU] Restore all parts for part " + ap.name);
+							//Debug.log("[EU] Restore all parts for part " + ap.name);
 							firstUgrade = false;
 							//reset
 							//save cost in confignode
@@ -149,7 +145,7 @@ namespace SpaceRace
 							}
 							else
 							{
-								Debug.Log("[EU] reload cost null > save current cost");
+								//Debug.log("[EU] reload cost null > save current cost");
 								ap.partConfig.AddValue("cost", ap.cost);
 								ap.internalConfig.AddValue("cost", ap.cost);
 							}
@@ -160,17 +156,17 @@ namespace SpaceRace
 							}
 							else
 							{
-								Debug.Log("[EU] reload title null > save current title");
+								//Debug.log("[EU] reload title null > save current title");
 								ap.partConfig.AddValue("title", ap.title);
 								ap.internalConfig.AddValue("title", ap.title);
 							}
 
-							Debug.Log("[EU] ap.partConfig=" + ap.partConfig);
+							//Debug.log("[EU] ap.partConfig=" + ap.partConfig);
 
 							// reload (in reverse order, of course)
 							foreach (ModuleUpgrade pmReset in allUpgrader.Reverse<ModuleUpgrade>())
 							{
-								Debug.Log("[EU] reload " + pmReset.moduleName);
+								//Debug.log("[EU] reload " + pmReset.moduleName);
 								try
 								{
 									//try to restore from last tech or from current techs?
@@ -185,7 +181,7 @@ namespace SpaceRace
 							}
 						}
 
-						Debug.Log("[EU] Upgrade PartModule " + pm.moduleName + " for part " + ap.name);
+						//Debug.log("[EU] Upgrade PartModule " + pm.moduleName + " for part " + ap.name);
 						try
 						{
 							pm.Upgrade(allTechResearched);

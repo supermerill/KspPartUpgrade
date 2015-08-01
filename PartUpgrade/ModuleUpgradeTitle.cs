@@ -25,54 +25,17 @@ using UnityEngine;
 
 namespace SpaceRace
 {
-	//TOOD: doesn't work yet.
-	class ModuleUpgradeTitle : ModuleUpgrade
+	//TOOD: doesn't work well yet.
+	class ModuleUpgradeTitle : ModuleUpgradeMonoString
 	{
-
-		[KSPField]
-		public string newTitle = "";
-
-		[KSPField]
-		public string addSuffix = "";
-
-		[KSPField]
-		public string tech = "";
-
-
-		public override void Upgrade(List<string> allTechName)
+		public override void upgradeValue(Part p, string value)
 		{
-				if (allTechName.Contains(tech))
-				{
-					Part p = partToUpdate();
-					Debug.Log("[MUT] upgrade title tech : " + tech + " : " + p.partInfo.title+" + "+addSuffix + " . " + newTitle);
-					if (newTitle != "")
-					{
-						p.partInfo.title = newTitle;
-					}
-					if (addSuffix != "")
-					{
-						p.partInfo.title += addSuffix;
-					}
-					Debug.Log("[MUT] upgrade title after : " + tech + " : " + p.partInfo.title);
-					//TODO: redo the partinfo ? do something to make it work!
-				}
+			p.partInfo.title = value;
 		}
 
-		public override void Restore(ConfigNode initialNode)
+		public override void Restore(Part p, ConfigNode initialNode)
 		{
-			if (persitance)
-				partToUpdate().partInfo.title = initialNode.GetValue("title");
-		}
-
-
-
-		public override void OnSave(ConfigNode node)
-		{
-			base.OnSave(node);
-			//foreach(BaseField field in part.Fields)
-			//{
-			//	Debug.Log("[MUT] field" + field.name + " " + field.guiName + " => " + field.host);
-			//}
+			p.partInfo.title = initialNode.GetValue("title");
 		}
 
 	}
