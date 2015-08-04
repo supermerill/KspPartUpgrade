@@ -32,7 +32,7 @@ namespace SpaceRace
 
 		public override void Upgrade(List<string> allTechName)
 		{
-			Debug.Log("[MUE] upgrade  ? " + part.name + " with nbTech: "+ allTechName.Count);
+			//Debug.Log("[MUE] upgrade  ? " + part.name + " with nbTech: "+ allTechName.Count);
 			
 			//find the last ok node
 			for (int i = allValues.Count - 1; i >= 0; i--)

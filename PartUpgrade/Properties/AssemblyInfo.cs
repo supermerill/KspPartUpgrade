@@ -35,7 +35,13 @@ using System.Runtime.InteropServices;
 //[assembly: AssemblyVersion("0.8.0.0")]
 //[assembly: AssemblyFileVersion("0.8.0.0")]
 //[assembly: KSPAssembly("PartUpgrade", 2, 5)]
+
+//DONT TOUCH THIS, NEVER
 [assembly: AssemblyVersion("1.0")]
-[assembly: AssemblyFileVersion("1.0.1")]
-[assembly: AssemblyInformationalVersion("1.0.1")]
+//DONT TOUCH THIS, NEVER
 [assembly: KSPAssembly("PartUpgrade", 1, 0)]
+
+//internal version checked by VersionChecker
+[assembly: AssemblyFileVersion("1.0.4.0")]
+//gui string to show via log/gui when version checker detect a problem.
+[assembly: AssemblyInformationalVersion("0.4")]

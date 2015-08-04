@@ -26,36 +26,25 @@ using UnityEngine;
 
 namespace SpaceRace
 {
-	public class ModuleUpgradeReflexion : ModuleUpgradeMonoString
+
+	//[Deprecated]
+	public class ModuleUpgradeReflexion : ModuleUpgradeSetField
+	{
+	}
+	public class ModuleUpgradeSetField : ModuleUpgradeMonoString
 	{
 		[KSPField]
 		public string fieldName;
-
-		public List<KeyValuePair<string, string>> tech2value = new List<KeyValuePair<string, string>>();
 
 		public override void upgradeValue(Part p, string value)
 		{
 			SetValue(p, value);
 		}
 
-		//public override void Upgrade(List<string> allTechName)
-		//{
-		//	Part p = partToUpdate();
-		//	for (int index = tech2value.Count-1; index >=0 ; index--)
-		//	{
-		//		KeyValuePair<string, string> entry = tech2value[index];
-		//		if (allTechName.Contains(entry.Key) || HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX)
-		//		{
-		//			SetValue(p, entry.Value);
-		//			break;
-		//		}
-		//	}
-		//}
-
-		//public override void Restore(ConfigNode initialNode)
-		//{
-		//	Restore(partToUpdate(), initialNode);
-		//}
+		public override void Restore(Part p, ConfigNode node)
+		{
+			SetValue(p, node.GetValue(fieldName));
+		}
 
 		public virtual void SetValue(Part p, string value)
 		{
@@ -136,17 +125,6 @@ namespace SpaceRace
 			{
 				field.SetValue(p, ConfigNode.ParseVector4(value));
 			}
-		}
-
-		public override void Restore(Part p, ConfigNode node)
-		{
-			SetValue(p, node.GetValue(fieldName));
-		}
-
-		public override void OnLoadIntialNode(ConfigNode node)
-		{
-			base.OnLoadIntialNode(node);
-			loadDictionnary(tech2value, "TECH-VALUE", node);
 		}
 
 		public override void OnLoadInFlight(ConfigNode node)

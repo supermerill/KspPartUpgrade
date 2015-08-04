@@ -64,11 +64,6 @@ namespace SpaceRace
 			base.OnLoadIntialNode(node);
 			loadDictionnary(tech2value, "TECH-VALUE", node);
 		}
-
-		public override void OnSave(ConfigNode node)
-		{
-			base.OnSave(node);
-		}
 		
 	}
 }
