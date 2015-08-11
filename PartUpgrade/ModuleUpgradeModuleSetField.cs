@@ -103,11 +103,10 @@ namespace SpaceRace
 						{
 							field.SetValue(mod, ConfigNode.ParseColor32(value));
 						}
-						//how?
-						//else if (field.FieldType == typeof(Enum))
-						//{
-						//	field.SetValue(mod, ConfigNode.ParseEnum(value));
-						//}
+						else if (field.FieldType.IsEnum)
+						{
+							field.SetValue(p, ConfigNode.ParseEnum(field.FieldType, value));
+						}
 						else if (field.FieldType == typeof(Matrix4x4))
 						{
 							field.SetValue(mod, ConfigNode.ParseMatrix4x4(value));
@@ -137,7 +136,7 @@ namespace SpaceRace
 				}
 				catch (Exception e)
 				{
-					//Debug.log("Warn: can't set the field " + field.Name + " : " + field.FieldType.Name + " with node value of " + value);
+					Debug.Log("Warn: can't set the field " + fieldName + " with node value of " + (value==null?"null":value));
 				}
 			}
 		}

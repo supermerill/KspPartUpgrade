@@ -398,11 +398,10 @@ namespace SpaceRace
 													{
 														field.SetValue(mod, ConfigNode.ParseColor32(config.GetValue(field.Name)));
 													}
-													//how?
-													//else if (field.FieldType == typeof(Enum))
-													//{
-													//	field.SetValue(mod, ConfigNode.ParseEnum(config.GetValue(field.Name)));
-													//}
+													else if (field.FieldType.IsEnum)
+													{
+														field.SetValue(mod, ConfigNode.ParseEnum(field.FieldType, config.GetValue(field.Name)));
+													}
 													else if (field.FieldType == typeof(Matrix4x4))
 													{
 														field.SetValue(mod, ConfigNode.ParseMatrix4x4(config.GetValue(field.Name)));

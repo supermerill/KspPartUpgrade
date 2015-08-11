@@ -175,8 +175,8 @@ namespace SpaceRace
 								}
 								catch (Exception e)
 								{
-									Debug.LogError("Error when Restore " + pm.moduleName + ", module n° "
-										+ ap.partPrefab.Modules.IndexOf(pm) + " in part " + ap.name + ", " + ap.title);
+									Debug.LogError("Error when Restore " + pmReset.moduleName + ", module n° "
+										+ ap.partPrefab.Modules.IndexOf(pmReset) + " in part " + ap.name + ", " + ap.title + ": " + e);
 								}
 							}
 						}
@@ -189,7 +189,7 @@ namespace SpaceRace
 						catch (Exception e)
 						{
 							Debug.LogError("Error when upgrading " + pm.moduleName + ", module n° "
-								+ ap.partPrefab.Modules.IndexOf(pm) + " in part " + ap.name + ", " + ap.title);
+								+ ap.partPrefab.Modules.IndexOf(pm) + " in part " + ap.name + ", " + ap.title + ": " + e);
 						}
 
 					}

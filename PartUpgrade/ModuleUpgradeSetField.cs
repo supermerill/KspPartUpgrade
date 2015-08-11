@@ -95,11 +95,10 @@ namespace SpaceRace
 			{
 				field.SetValue(p, ConfigNode.ParseColor32(value));
 			}
-			//how?
-			//else if (field.FieldType == typeof(Enum))
-			//{
-			//	field.SetValue(p, ConfigNode.ParseEnum(value));
-			//}
+			else if (field.FieldType.IsEnum)
+			{
+				field.SetValue(p, ConfigNode.ParseEnum(field.FieldType, value));
+			}
 			else if (field.FieldType == typeof(Matrix4x4))
 			{
 				field.SetValue(p, ConfigNode.ParseMatrix4x4(value));
