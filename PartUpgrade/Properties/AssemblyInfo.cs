@@ -42,6 +42,6 @@ using System.Runtime.InteropServices;
 [assembly: KSPAssembly("PartUpgrade", 1, 0)]
 
 //internal version checked by VersionChecker
-[assembly: AssemblyFileVersion("1.0.5.0")]
+[assembly: AssemblyFileVersion("1.0.5.1")]
 //gui string to show via log/gui when version checker detect a problem.
-[assembly: AssemblyInformationalVersion("0.5")]
+[assembly: AssemblyInformationalVersion("0.5.1")]

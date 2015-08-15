@@ -155,8 +155,8 @@ namespace SpaceRace
 					FieldInfo field = mod.GetType().GetField(fieldName);
 					if (field != null && field.IsDefined(typeof(KSPField), true))
 					{
-						//Debug.Log("[MUMSF] field finded, value is "+field.GetValue(part));
-						node.AddValue(fieldName, field.GetValue(part));
+						//Debug.Log("[MUMSF] field finded, value is "+field.GetValue(mod));
+						node.AddValue(fieldName, field.GetValue(mod));
 					}
 				}
 				catch (Exception e)
